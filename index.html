@@ -758,9 +758,10 @@ Reponds UNIQUEMENT en JSON valide sans texte autour:
 {"prix_neuf":"","prix_occasion_moyen":"","frais_mr":"","prix_max_avec_mr":"","marge":"","revente":"Facile/Moyenne/Difficile","raison_revente":"","verdict":"ACHETE/NEGOCIE/PASSE","justification":"","conseil":"","attention":""}`;
 
 const MODELS=[
-  'mistralai/mistral-small-3.1-24b-instruct:free',
-  'google/gemma-3-27b-it:free',
-  'meta-llama/llama-3.3-70b-instruct:free'
+  'openrouter/auto',
+  'deepseek/deepseek-chat-v3-0324:free',
+  'meta-llama/llama-4-maverick:free',
+  'mistralai/mistral-small-3.1-24b-instruct:free'
 ];
 
 let currentAbort=null;
@@ -839,10 +840,13 @@ async function runAnalyse(){
       }
       if(i===MODELS.length-1&&!success){
         let hint='';
-        if(err.message.includes('401'))hint='<br><br>💡 Clé invalide — vérifie sur openrouter.ai';
-        else if(err.message.includes('429'))hint='<br><br>💡 Limite 200/jour atteinte. Réessaie demain.';
-        else if(err.name==='AbortError')hint='<br><br>💡 Timeout (25s). Serveurs chargés, réessaie.';
-        res.innerHTML=`<div class="error-box"><div class="error-title">❌ Erreur</div><div class="error-msg">${esc(err.message)}${hint}</div></div>`;
+        const m=err.message||'';
+        if(m.includes('401')) hint='<br><br>💡 Clé invalide — régénère-la sur openrouter.ai → Keys.';
+        else if(m.includes('429')) hint='<br><br>💡 Limite atteinte (50/jour sans crédits). Réessaie demain.';
+        else if(m.includes('Provider returned error')||m.includes('provider')||m.includes('No endpoints')) hint='<br><br>💡 Va sur <a href="https://openrouter.ai/settings/privacy" target="_blank" style="color:var(--accent2)">openrouter.ai/settings/privacy</a> et active <strong>"Enable training and logging"</strong>. Sans ça, les modèles gratuits sont bloqués.';
+        else if(err.name==='AbortError') hint='<br><br>💡 Timeout 25s dépassé. Les serveurs gratuits sont chargés, réessaie dans quelques secondes.';
+        else if(m.includes('fetch')||m.includes('Failed')) hint='<br><br>💡 Erreur réseau. Vérifie ta connexion internet.';
+        res.innerHTML=`<div class="error-box"><div class="error-title">❌ Erreur</div><div class="error-msg">${esc(m)}${hint}</div></div>`;
       }
     }
   }

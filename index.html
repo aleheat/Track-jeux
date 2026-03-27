@@ -7,240 +7,233 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:#0f0e11;--surface:#1a1820;--surface2:#221f2a;--border:#2e2a38;
-    --accent:#c8f04d;--accent2:#7c5cbf;--text:#f0ecff;--muted:#7a7390;
-    --lbc:#ff6b35;--vinted:#09b1ba;--okk:#e84393;
-    --radius:14px;--tb:#c8f04d;--b:#f0c040;--m:#f06060;
-    --green:#4caf82;--yellow:#f0c040;--red:#f06060;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:'DM Mono',monospace;background:var(--bg);color:var(--text);min-height:100vh;padding:0 0 60px;}
+:root{--bg:#0f0e11;--surface:#1a1820;--surface2:#221f2a;--border:#2e2a38;--accent:#c8f04d;--accent2:#7c5cbf;--text:#f0ecff;--muted:#7a7390;--lbc:#ff6b35;--vinted:#09b1ba;--okk:#e84393;--radius:14px;--tb:#c8f04d;--b:#f0c040;--m:#f06060;--green:#4caf82;--yellow:#f0c040;--red:#f06060;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Mono',monospace;background:var(--bg);color:var(--text);min-height:100vh;padding:0 0 60px;}
 
-  /* HEADER */
-  header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:12px;flex-wrap:wrap;}
-  header h1{font-family:'Syne',sans-serif;font-size:clamp(1rem,4vw,1.4rem);font-weight:800;letter-spacing:-0.03em;color:var(--accent);}
-  header h1 span{color:var(--text);}
-  .header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-  .toggle-bought{font-family:'DM Mono',monospace;font-size:.72rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:999px;cursor:pointer;transition:all .2s;}
-  .toggle-bought:hover,.toggle-bought.active{border-color:var(--accent2);color:var(--accent);background:rgba(124,92,191,.1);}
-  .btn-add-top{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;background:var(--accent);color:#0f0e11;border:none;padding:8px 16px;border-radius:999px;cursor:pointer;transition:transform .15s,opacity .15s;}
-  .btn-add-top:hover{opacity:.85;transform:scale(1.03);}
+/* HEADER */
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:10px;flex-wrap:wrap;}
+header h1{font-family:'Syne',sans-serif;font-size:clamp(1rem,4vw,1.35rem);font-weight:800;letter-spacing:-0.03em;color:var(--accent);}
+header h1 span{color:var(--text);}
+.header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.toggle-bought{font-family:'DM Mono',monospace;font-size:.7rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:5px 11px;border-radius:999px;cursor:pointer;transition:all .2s;}
+.toggle-bought:hover,.toggle-bought.active{border-color:var(--accent2);color:var(--accent);background:rgba(124,92,191,.1);}
+.btn-add-top{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;background:var(--accent);color:#0f0e11;border:none;padding:7px 15px;border-radius:999px;cursor:pointer;transition:transform .15s,opacity .15s;}
+.btn-add-top:hover{opacity:.85;transform:scale(1.03);}
+.btn-export{font-family:'DM Mono',monospace;font-size:.7rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:5px 11px;border-radius:999px;cursor:pointer;transition:all .2s;}
+.btn-export:hover{border-color:var(--accent2);color:var(--accent2);}
 
-  /* TABS */
-  .tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface);padding:0 16px;overflow-x:auto;}
-  .tabs::-webkit-scrollbar{display:none;}
-  .tab-btn{font-family:'Syne',sans-serif;font-weight:600;font-size:.78rem;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);padding:12px 14px;cursor:pointer;transition:all .2s;white-space:nowrap;}
-  .tab-btn:hover{color:var(--text);}
-  .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface);padding:0 16px;overflow-x:auto;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:'Syne',sans-serif;font-weight:600;font-size:.76rem;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);padding:11px 13px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
 
-  main{max-width:860px;margin:0 auto;padding:24px 16px 0;}
-  .tab-panel{display:none;}
-  .tab-panel.active{display:block;}
+main{max-width:860px;margin:0 auto;padding:22px 14px 0;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
 
-  /* STATS */
-  .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px;}
-  .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;flex:1;min-width:90px;}
-  .stat-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
-  .stat-value{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--accent);}
+/* STATS */
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:11px 15px;flex:1;min-width:88px;}
+.stat-label{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;}
+.stat-value{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:var(--accent);}
 
-  /* MODAL */
-  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;padding:16px;}
-  .overlay.open{display:flex;}
-  .modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:26px 22px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;animation:slideUp .25s ease;}
-  @keyframes slideUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
-  .modal h2{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;margin-bottom:20px;color:var(--text);}
-  .form-group{margin-bottom:14px;}
-  label{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:5px;}
-  input[type="text"],input[type="number"],input[type="url"],input[type="password"],select,textarea{
-    width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);
-    font-family:'DM Mono',monospace;font-size:.88rem;padding:9px 13px;border-radius:10px;outline:none;transition:border-color .2s;
-  }
-  input:focus,select:focus,textarea:focus{border-color:var(--accent2);}
-  select option{background:var(--surface2);}
-  textarea{resize:vertical;min-height:65px;}
-  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-  .modal-actions{display:flex;gap:10px;margin-top:20px;}
-  .btn-save{flex:1;font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;background:var(--accent);color:#0f0e11;border:none;padding:11px;border-radius:10px;cursor:pointer;}
-  .btn-save:hover{opacity:.85;}
-  .btn-cancel{font-family:'DM Mono',monospace;font-size:.82rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:11px 18px;border-radius:10px;cursor:pointer;}
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;align-items:center;justify-content:center;padding:14px;}
+.overlay.open{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:24px 20px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;animation:slideUp .25s ease;}
+@keyframes slideUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+.modal h2{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;margin-bottom:18px;color:var(--text);}
+.form-group{margin-bottom:13px;}
+label{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:5px;}
+input[type="text"],input[type="number"],input[type="url"],input[type="password"],select,textarea{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:.87rem;padding:9px 12px;border-radius:10px;outline:none;transition:border-color .2s;}
+input:focus,select:focus,textarea:focus{border-color:var(--accent2);}
+select option{background:var(--surface2);}
+textarea{resize:vertical;min-height:60px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.modal-actions{display:flex;gap:10px;margin-top:18px;}
+.btn-save{flex:1;font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;background:var(--accent);color:#0f0e11;border:none;padding:11px;border-radius:10px;cursor:pointer;}
+.btn-save:hover{opacity:.85;}
+.btn-cancel-modal{font-family:'DM Mono',monospace;font-size:.8rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:11px 16px;border-radius:10px;cursor:pointer;}
 
-  /* FILTERS */
-  .filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;align-items:center;}
-  .filter-btn{font-family:'DM Mono',monospace;font-size:.7rem;border:1px solid var(--border);background:transparent;color:var(--muted);padding:4px 12px;border-radius:999px;cursor:pointer;transition:all .15s;}
-  .filter-btn:hover{border-color:var(--accent2);color:var(--text);}
-  .filter-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(200,240,77,.08);}
-  .filter-sep{width:1px;height:18px;background:var(--border);}
-  .sort-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
-  .sort-row label{margin:0;white-space:nowrap;font-size:.65rem;}
-  .sort-row select{width:auto;flex:1;font-size:.78rem;padding:6px 10px;}
-  .list-header{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
-  #game-list{display:flex;flex-direction:column;gap:10px;}
-  .empty{text-align:center;color:var(--muted);padding:50px 20px;font-size:.88rem;}
-  .empty span{font-size:2rem;display:block;margin-bottom:10px;}
+/* FILTERS */
+.filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;align-items:center;}
+.filter-btn{font-family:'DM Mono',monospace;font-size:.68rem;border:1px solid var(--border);background:transparent;color:var(--muted);padding:4px 11px;border-radius:999px;cursor:pointer;transition:all .15s;}
+.filter-btn:hover{border-color:var(--accent2);color:var(--text);}
+.filter-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(200,240,77,.08);}
+.filter-sep{width:1px;height:18px;background:var(--border);}
+.sort-row{display:flex;align-items:center;gap:10px;margin-bottom:13px;}
+.sort-row label{margin:0;white-space:nowrap;font-size:.63rem;}
+.sort-row select{width:auto;flex:1;font-size:.76rem;padding:5px 9px;}
+.list-header{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px;}
+#game-list{display:flex;flex-direction:column;gap:9px;}
+.empty{text-align:center;color:var(--muted);padding:48px 20px;font-size:.86rem;}
+.empty span{font-size:2rem;display:block;margin-bottom:10px;}
 
-  /* CARDS */
-  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px 17px;display:grid;grid-template-columns:1fr auto;gap:8px;transition:border-color .2s;animation:fadeIn .2s ease;}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-  .card:hover{border-color:var(--accent2);}
-  .card.bought{opacity:.45;border-style:dashed;}
-  .card-left{min-width:0;}
-  .card-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:6px;}
-  .card-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .badge{font-size:.6rem;padding:2px 7px;border-radius:999px;font-weight:500;white-space:nowrap;}
-  .badge-lbc{background:rgba(255,107,53,.15);color:var(--lbc);border:1px solid rgba(255,107,53,.3);}
-  .badge-vinted{background:rgba(9,177,186,.15);color:var(--vinted);border:1px solid rgba(9,177,186,.3);}
-  .badge-okk{background:rgba(232,67,147,.15);color:var(--okk);border:1px solid rgba(232,67,147,.3);}
-  .badge-tb{background:rgba(200,240,77,.12);color:var(--tb);border:1px solid rgba(200,240,77,.25);}
-  .badge-b{background:rgba(240,192,64,.12);color:var(--b);border:1px solid rgba(240,192,64,.25);}
-  .badge-m{background:rgba(240,96,96,.12);color:var(--m);border:1px solid rgba(240,96,96,.25);}
-  .card-meta{font-size:.73rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:10px;}
-  .card-meta a{color:var(--accent2);text-decoration:none;}
-  .card-meta a:hover{text-decoration:underline;}
-  .card-right{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:8px;}
-  .card-price{font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;color:var(--accent);white-space:nowrap;}
-  .score-pill{font-size:.6rem;background:rgba(200,240,77,.08);border:1px solid rgba(200,240,77,.2);color:var(--accent);padding:2px 8px;border-radius:999px;}
-  .card-actions{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap;}
-  .check-label{display:flex;align-items:center;gap:5px;font-size:.7rem;color:var(--muted);cursor:pointer;}
-  .check-label input{accent-color:var(--accent);width:14px;height:14px;cursor:pointer;}
-  .btn-sm{background:transparent;border:1px solid var(--border);color:var(--muted);font-size:.72rem;padding:3px 9px;border-radius:7px;cursor:pointer;font-family:'DM Mono',monospace;transition:all .15s;}
-  .btn-sm.edit:hover{border-color:var(--accent2);color:var(--accent2);}
-  .btn-sm.del:hover{border-color:var(--m);color:var(--m);}
-  .btn-sm.ana:hover{border-color:var(--accent);color:var(--accent);}
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:8px;transition:border-color .2s;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:translateY(0);}}
+.card:hover{border-color:var(--accent2);}
+.card.bought{opacity:.4;border-style:dashed;}
+.card-left{min-width:0;}
+.card-top{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:5px;}
+.card-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.93rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.badge{font-size:.58rem;padding:2px 7px;border-radius:999px;font-weight:500;white-space:nowrap;}
+.badge-lbc{background:rgba(255,107,53,.15);color:var(--lbc);border:1px solid rgba(255,107,53,.3);}
+.badge-vinted{background:rgba(9,177,186,.15);color:var(--vinted);border:1px solid rgba(9,177,186,.3);}
+.badge-okk{background:rgba(232,67,147,.15);color:var(--okk);border:1px solid rgba(232,67,147,.3);}
+.badge-tb{background:rgba(200,240,77,.12);color:var(--tb);border:1px solid rgba(200,240,77,.25);}
+.badge-b{background:rgba(240,192,64,.12);color:var(--b);border:1px solid rgba(240,192,64,.25);}
+.badge-m{background:rgba(240,96,96,.12);color:var(--m);border:1px solid rgba(240,96,96,.25);}
+/* Lien visible directement sur la carte */
+.card-link{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;color:var(--accent2);text-decoration:none;margin-bottom:5px;}
+.card-link:hover{text-decoration:underline;}
+.card-meta{font-size:.7rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px;margin-bottom:3px;}
+.card-right{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:6px;}
+.card-price{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--accent);white-space:nowrap;}
+.score-pill{font-size:.58rem;background:rgba(200,240,77,.08);border:1px solid rgba(200,240,77,.2);color:var(--accent);padding:2px 7px;border-radius:999px;}
+.card-actions{display:flex;align-items:center;gap:5px;margin-top:7px;flex-wrap:wrap;}
+.check-label{display:flex;align-items:center;gap:5px;font-size:.68rem;color:var(--muted);cursor:pointer;}
+.check-label input{accent-color:var(--accent);width:13px;height:13px;cursor:pointer;}
+.btn-sm{background:transparent;border:1px solid var(--border);color:var(--muted);font-size:.7rem;padding:3px 8px;border-radius:7px;cursor:pointer;font-family:'DM Mono',monospace;transition:all .15s;}
+.btn-sm.edit:hover{border-color:var(--accent2);color:var(--accent2);}
+.btn-sm.del:hover{border-color:var(--m);color:var(--m);}
+.btn-sm.ana:hover{border-color:var(--accent);color:var(--accent);}
 
-  /* ═══ ANALYSE COMMUN ═══ */
-  .analyse-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:18px;}
-  .analyse-block h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;margin-bottom:14px;color:var(--text);}
-  .url-row{display:flex;gap:8px;}
-  .url-row input{flex:1;}
-  .btn-detect{font-family:'Syne',sans-serif;font-weight:700;font-size:.75rem;background:var(--accent2);color:#fff;border:none;padding:9px 13px;border-radius:10px;cursor:pointer;white-space:nowrap;}
-  .btn-detect:hover{opacity:.8;}
-  .detected-tag{display:inline-block;margin-top:7px;font-size:.7rem;background:rgba(124,92,191,.12);border:1px solid rgba(124,92,191,.3);color:var(--accent2);padding:2px 9px;border-radius:999px;}
+/* PIN */
+.pin-overlay{display:none;position:fixed;inset:0;background:rgba(10,9,14,.93);z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.pin-overlay.show{display:flex;}
+.pin-box{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:34px 26px;width:100%;max-width:320px;text-align:center;animation:slideUp .25s ease;}
+.pin-icon{font-size:1.8rem;margin-bottom:12px;}
+.pin-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--text);margin-bottom:5px;}
+.pin-sub{font-size:.72rem;color:var(--muted);margin-bottom:22px;line-height:1.5;}
+.pin-dots{display:flex;justify-content:center;gap:12px;margin-bottom:22px;}
+.pin-dot{width:13px;height:13px;border-radius:50%;background:var(--border);transition:background .15s;}
+.pin-dot.filled{background:var(--accent);}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px;}
+.pin-key{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:13px;border-radius:11px;cursor:pointer;transition:all .15s;user-select:none;}
+.pin-key:hover{background:var(--border);}
+.pin-key:active{transform:scale(.93);}
+.pin-key.del{font-size:.82rem;color:var(--muted);}
+.pin-error{font-size:.72rem;color:var(--red);min-height:18px;margin-bottom:6px;}
+.pin-setup-link{font-size:.7rem;color:var(--muted);cursor:pointer;text-decoration:underline;margin-top:4px;display:inline-block;}
+.pin-setup-link:hover{color:var(--accent2);}
 
-  /* ═══ PIN LOCK ═══ */
-  .pin-overlay{display:none;position:fixed;inset:0;background:rgba(10,9,14,.92);z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
-  .pin-overlay.show{display:flex;}
-  .pin-box{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:36px 28px;width:100%;max-width:340px;text-align:center;animation:slideUp .25s ease;}
-  .pin-icon{font-size:2rem;margin-bottom:14px;}
-  .pin-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:var(--text);margin-bottom:6px;}
-  .pin-sub{font-size:.75rem;color:var(--muted);margin-bottom:24px;line-height:1.5;}
-  .pin-dots{display:flex;justify-content:center;gap:12px;margin-bottom:24px;}
-  .pin-dot{width:14px;height:14px;border-radius:50%;background:var(--border);transition:background .15s;}
-  .pin-dot.filled{background:var(--accent);}
-  .pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
-  .pin-key{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:12px;cursor:pointer;transition:all .15s;user-select:none;}
-  .pin-key:hover{background:var(--border);border-color:var(--accent2);}
-  .pin-key:active{transform:scale(.94);}
-  .pin-key.del{font-size:.85rem;color:var(--muted);}
-  .pin-error{font-size:.75rem;color:var(--red);min-height:20px;margin-bottom:8px;animation:shake .3s ease;}
-  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
-  .pin-setup-link{font-size:.72rem;color:var(--muted);cursor:pointer;text-decoration:underline;margin-top:4px;display:inline-block;}
-  .pin-setup-link:hover{color:var(--accent2);}
+/* ANALYSE */
+.analyse-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px;}
+.analyse-block h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.93rem;margin-bottom:14px;color:var(--text);}
+.api-setup{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:16px;}
+.api-setup-header{padding:13px 17px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:10px;}
+.api-setup-header:hover{background:var(--surface2);}
+.api-setup-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.86rem;display:flex;align-items:center;gap:8px;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--m);flex-shrink:0;}
+.dot.ok{background:var(--green);}
+.api-setup-body{padding:0 17px 17px;border-top:1px solid var(--border);}
+.api-setup-body.hidden{display:none;}
+.api-help-box{background:var(--surface2);border-radius:10px;padding:12px 14px;margin:12px 0;font-size:.74rem;color:var(--muted);line-height:1.7;}
+.api-help-box strong{color:var(--text);}
+.api-help-box a{color:var(--accent2);text-decoration:none;}
+.api-help-box a:hover{text-decoration:underline;}
+.api-key-row{display:flex;gap:8px;}
+.api-key-row input{flex:1;}
+.btn-key-save{font-family:'Syne',sans-serif;font-weight:700;font-size:.76rem;background:var(--accent2);color:#fff;border:none;padding:9px 13px;border-radius:10px;cursor:pointer;white-space:nowrap;}
+.btn-key-save:hover{opacity:.8;}
+.key-status{font-size:.66rem;margin-top:6px;color:var(--muted);}
+.key-status.ok{color:var(--green);}
+.key-status.err{color:var(--red);}
+.btn-key-del{font-family:'DM Mono',monospace;font-size:.66rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:3px 9px;border-radius:7px;cursor:pointer;margin-top:5px;}
+.btn-key-del:hover{border-color:var(--red);color:var(--red);}
 
-  /* ═══ ONGLET AVEC API ═══ */
-  .api-setup{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:18px;}
-  .api-setup-header{padding:13px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:10px;}
-  .api-setup-header:hover{background:var(--surface2);}
-  .api-setup-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;display:flex;align-items:center;gap:8px;}
-  .dot{width:8px;height:8px;border-radius:50%;background:var(--m);flex-shrink:0;}
-  .dot.ok{background:var(--green);}
-  .api-setup-body{padding:0 18px 18px;border-top:1px solid var(--border);}
-  .api-setup-body.hidden{display:none;}
-  .api-help-box{background:var(--surface2);border-radius:10px;padding:13px 15px;margin:13px 0;font-size:.76rem;color:var(--muted);line-height:1.7;}
-  .api-help-box strong{color:var(--text);}
-  .api-help-box a{color:var(--accent2);text-decoration:none;}
-  .api-help-box a:hover{text-decoration:underline;}
-  .api-key-row{display:flex;gap:8px;}
-  .api-key-row input{flex:1;}
-  .btn-key-save{font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;background:var(--accent2);color:#fff;border:none;padding:9px 14px;border-radius:10px;cursor:pointer;white-space:nowrap;}
-  .btn-key-save:hover{opacity:.8;}
-  .key-status{font-size:.68rem;margin-top:7px;color:var(--muted);}
-  .key-status.ok{color:var(--green);}
-  .key-status.err{color:var(--red);}
-  .btn-key-del{font-family:'DM Mono',monospace;font-size:.68rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:3px 9px;border-radius:7px;cursor:pointer;margin-top:5px;}
-  .btn-key-del:hover{border-color:var(--red);color:var(--red);}
+.btn-analyse{width:100%;font-family:'Syne',sans-serif;font-weight:700;font-size:.93rem;background:var(--accent);color:#0f0e11;border:none;padding:13px;border-radius:10px;cursor:pointer;transition:opacity .15s,transform .15s;}
+.btn-analyse:hover{opacity:.85;transform:scale(1.01);}
+.btn-cancel-analyse{width:100%;font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;background:transparent;color:var(--red);border:1px solid var(--red);padding:12px;border-radius:10px;cursor:pointer;margin-top:8px;display:none;}
+.btn-cancel-analyse:hover{background:rgba(240,96,96,.08);}
 
-  .btn-analyse{width:100%;font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;background:var(--accent);color:#0f0e11;border:none;padding:13px;border-radius:10px;cursor:pointer;transition:opacity .15s,transform .15s;margin-top:4px;}
-  .btn-analyse:hover{opacity:.85;transform:scale(1.01);}
-  .btn-analyse:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+.loading-pulse{display:flex;align-items:center;gap:12px;padding:24px 0;color:var(--muted);font-size:.82rem;}
+.pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 1.2s ease-in-out infinite;}
+.pulse-dot:nth-child(2){animation-delay:.2s;}
+.pulse-dot:nth-child(3){animation-delay:.4s;}
+@keyframes pulse{0%,100%{opacity:.2;transform:scale(.8);}50%{opacity:1;transform:scale(1.1);}}
 
-  /* Loading */
-  .loading-pulse{display:flex;align-items:center;gap:12px;padding:26px 0;color:var(--muted);font-size:.83rem;}
-  .pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 1.2s ease-in-out infinite;}
-  .pulse-dot:nth-child(2){animation-delay:.2s;}
-  .pulse-dot:nth-child(3){animation-delay:.4s;}
-  @keyframes pulse{0%,100%{opacity:.2;transform:scale(.8);}50%{opacity:1;transform:scale(1.1);}}
+/* RÉSULTAT */
+.result-wrap{animation:fadeIn .3s ease;margin-bottom:16px;}
+.result-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.result-header{padding:14px 17px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.result-game{font-family:'Syne',sans-serif;font-weight:800;font-size:.98rem;}
+.vp{font-family:'Syne',sans-serif;font-weight:800;font-size:.88rem;padding:5px 16px;border-radius:999px;}
+.v-achete{background:rgba(76,175,130,.15);color:var(--green);border:2px solid rgba(76,175,130,.4);}
+.v-negocie{background:rgba(240,192,64,.12);color:var(--yellow);border:2px solid rgba(240,192,64,.4);}
+.v-passe{background:rgba(240,96,96,.12);color:var(--red);border:2px solid rgba(240,96,96,.4);}
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);}
+.rcell{padding:11px 15px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
+.rcell:nth-child(3n){border-right:none;}
+.rcell:nth-last-child(-n+3){border-bottom:none;}
+.rcell-label{font-size:.57rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px;}
+.rcell-val{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:var(--text);}
+.rcell-val.g{color:var(--green);}
+.rcell-val.y{color:var(--yellow);}
+.rcell-val.r{color:var(--red);}
+.result-body{padding:14px 17px;}
+.rsec{margin-bottom:10px;}
+.rsec-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px;}
+.rsec-text{font-size:.82rem;color:var(--text);line-height:1.55;}
+.rev-badge{display:inline-block;font-size:.65rem;padding:2px 7px;border-radius:999px;margin-right:5px;}
+.rev-facile{background:rgba(76,175,130,.1);color:var(--green);border:1px solid rgba(76,175,130,.3);}
+.rev-moyenne{background:rgba(240,192,64,.1);color:var(--yellow);border:1px solid rgba(240,192,64,.3);}
+.rev-difficile{background:rgba(240,96,96,.1);color:var(--red);border:1px solid rgba(240,96,96,.3);}
+.conseil-box{background:rgba(124,92,191,.08);border:1px solid rgba(124,92,191,.25);border-radius:10px;padding:11px 13px;font-size:.8rem;color:var(--text);line-height:1.5;margin-top:3px;}
+.result-footer{border-top:1px solid var(--border);padding:8px 17px;font-size:.66rem;color:var(--muted);}
+.result-footer span{color:var(--accent);}
 
-  /* Résultat IA */
-  .result-wrap{animation:fadeIn .3s ease;margin-bottom:18px;}
-  .result-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
-  .result-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
-  .result-game{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;}
-  .vp{font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;padding:5px 18px;border-radius:999px;}
-  .v-achete{background:rgba(76,175,130,.15);color:var(--green);border:2px solid rgba(76,175,130,.4);}
-  .v-negocie{background:rgba(240,192,64,.12);color:var(--yellow);border:2px solid rgba(240,192,64,.4);}
-  .v-passe{background:rgba(240,96,96,.12);color:var(--red);border:2px solid rgba(240,96,96,.4);}
-  .result-grid{display:grid;grid-template-columns:repeat(3,1fr);}
-  .rcell{padding:11px 16px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
-  .rcell:nth-child(3n){border-right:none;}
-  .rcell:nth-last-child(-n+3){border-bottom:none;}
-  .rcell-label{font-size:.58rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px;}
-  .rcell-val{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--text);}
-  .rcell-val.g{color:var(--green);}
-  .rcell-val.y{color:var(--yellow);}
-  .rcell-val.r{color:var(--red);}
-  .result-body{padding:14px 18px;}
-  .rsec{margin-bottom:11px;}
-  .rsec-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px;}
-  .rsec-text{font-size:.83rem;color:var(--text);line-height:1.55;}
-  .rev-badge{display:inline-block;font-size:.66rem;padding:2px 8px;border-radius:999px;margin-right:5px;}
-  .rev-facile{background:rgba(76,175,130,.1);color:var(--green);border:1px solid rgba(76,175,130,.3);}
-  .rev-moyenne{background:rgba(240,192,64,.1);color:var(--yellow);border:1px solid rgba(240,192,64,.3);}
-  .rev-difficile{background:rgba(240,96,96,.1);color:var(--red);border:1px solid rgba(240,96,96,.3);}
-  .conseil-box{background:rgba(124,92,191,.08);border:1px solid rgba(124,92,191,.25);border-radius:10px;padding:11px 13px;font-size:.81rem;color:var(--text);line-height:1.5;margin-top:4px;}
-  .result-footer{border-top:1px solid var(--border);padding:9px 18px;font-size:.68rem;color:var(--muted);}
-  .result-footer span{color:var(--accent);}
+/* HISTORIQUE ANALYSES */
+.hist-section{margin-top:20px;}
+.hist-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em;}
+.hist-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:9px 13px;margin-bottom:7px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .15s;}
+.hist-item:hover{border-color:var(--accent2);}
+.hist-name{font-family:'Syne',sans-serif;font-weight:600;font-size:.82rem;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.hist-price{font-size:.72rem;color:var(--muted);white-space:nowrap;}
+.hist-vp{font-size:.65rem;font-weight:600;padding:2px 8px;border-radius:999px;}
+.hv-a{background:rgba(76,175,130,.1);color:var(--green);border:1px solid rgba(76,175,130,.3);}
+.hv-n{background:rgba(240,192,64,.1);color:var(--yellow);border:1px solid rgba(240,192,64,.3);}
+.hv-p{background:rgba(240,96,96,.1);color:var(--red);border:1px solid rgba(240,96,96,.3);}
+.hist-date{font-size:.62rem;color:var(--muted);white-space:nowrap;}
 
-  /* Ajouter à la liste */
-  .add-block{background:var(--surface);border:2px solid rgba(200,240,77,.3);border-radius:var(--radius);padding:18px;margin-bottom:18px;animation:fadeIn .3s ease;}
-  .add-block h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--accent);margin-bottom:3px;}
-  .add-block p{font-size:.75rem;color:var(--muted);margin-bottom:14px;}
-  .add-fields{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px;}
-  .btn-do-add{width:100%;font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;background:var(--accent);color:#0f0e11;border:none;padding:12px;border-radius:10px;cursor:pointer;}
-  .btn-do-add:hover{opacity:.85;}
-  .btn-do-add.success{background:var(--green);color:#fff;}
+/* AJOUTER À LA LISTE */
+.add-block{background:var(--surface);border:2px solid rgba(200,240,77,.3);border-radius:var(--radius);padding:18px;margin-bottom:16px;animation:fadeIn .3s ease;}
+.add-block h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--accent);margin-bottom:3px;}
+.add-block p{font-size:.73rem;color:var(--muted);margin-bottom:14px;}
+.add-fields{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px;}
+.btn-do-add{width:100%;font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;background:var(--accent);color:#0f0e11;border:none;padding:12px;border-radius:10px;cursor:pointer;}
+.btn-do-add:hover{opacity:.85;}
+.btn-do-add.success{background:var(--green);color:#fff;}
 
-  .error-box{background:var(--surface);border:1px solid rgba(240,96,96,.35);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;}
-  .error-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:var(--red);margin-bottom:5px;}
-  .error-msg{font-size:.8rem;color:var(--muted);line-height:1.6;}
+.error-box{background:var(--surface);border:1px solid rgba(240,96,96,.35);border-radius:var(--radius);padding:15px 17px;margin-bottom:14px;}
+.error-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.86rem;color:var(--red);margin-bottom:5px;}
+.error-msg{font-size:.79rem;color:var(--muted);line-height:1.6;}
 
-  /* ═══ ONGLET SANS API ═══ */
-  .howto-box{background:var(--surface);border:1px solid rgba(200,240,77,.2);border-radius:var(--radius);padding:16px 18px;margin-bottom:18px;}
-  .howto-box-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--accent);margin-bottom:12px;}
-  .howto-step{display:flex;gap:10px;margin-bottom:9px;align-items:flex-start;font-size:.78rem;color:var(--muted);line-height:1.55;}
-  .howto-step:last-child{margin-bottom:0;}
-  .howto-num{font-family:'Syne',sans-serif;font-weight:800;font-size:.7rem;background:var(--accent2);color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
-  .howto-step strong{color:var(--text);}
+/* SANS API */
+.howto-box{background:var(--surface);border:1px solid rgba(200,240,77,.2);border-radius:var(--radius);padding:15px 17px;margin-bottom:16px;}
+.howto-box-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:var(--accent);margin-bottom:11px;}
+.howto-step{display:flex;gap:10px;margin-bottom:8px;align-items:flex-start;font-size:.76rem;color:var(--muted);line-height:1.55;}
+.howto-step:last-child{margin-bottom:0;}
+.howto-num{font-family:'Syne',sans-serif;font-weight:800;font-size:.68rem;background:var(--accent2);color:#fff;width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.howto-step strong{color:var(--text);}
+.prompt-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:16px;}
+.prompt-wrap h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;padding:13px 17px;border-bottom:1px solid var(--border);color:var(--text);}
+.prompt-box{padding:13px 17px;font-size:.76rem;color:var(--text);line-height:1.65;white-space:pre-wrap;word-break:break-word;background:var(--surface2);max-height:280px;overflow-y:auto;}
+.prompt-actions{padding:11px 17px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;}
+.btn-copy{font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;background:var(--accent);color:#0f0e11;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;}
+.btn-copy:hover{opacity:.85;}
+.btn-copy.ok{background:var(--green);color:#fff;}
+.btn-claude{font-family:'DM Mono',monospace;font-size:.73rem;background:transparent;border:1px solid var(--accent2);color:var(--accent2);padding:8px 13px;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;}
+.btn-claude:hover{background:rgba(124,92,191,.12);}
 
-  .prompt-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:18px;}
-  .prompt-wrap h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;padding:14px 18px;border-bottom:1px solid var(--border);color:var(--text);}
-  .prompt-box{padding:14px 18px;font-size:.78rem;color:var(--text);line-height:1.65;white-space:pre-wrap;word-break:break-word;background:var(--surface2);max-height:320px;overflow-y:auto;}
-  .prompt-actions{padding:12px 18px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;}
-  .btn-copy{font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;background:var(--accent);color:#0f0e11;border:none;padding:9px 18px;border-radius:8px;cursor:pointer;}
-  .btn-copy:hover{opacity:.85;}
-  .btn-copy.ok{background:var(--green);color:#fff;}
-  .btn-claude{font-family:'DM Mono',monospace;font-size:.75rem;background:transparent;border:1px solid var(--accent2);color:var(--accent2);padding:9px 14px;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;}
-  .btn-claude:hover{background:rgba(124,92,191,.12);}
-
-  @media(max-width:600px){
-    .form-row,.add-fields,.result-grid{grid-template-columns:1fr 1fr;}
-    .tab-btn{padding:12px 10px;font-size:.72rem;}
-    .card-price{font-size:1.1rem;}
-    .url-row{flex-direction:column;}
-  }
-  ::-webkit-scrollbar{width:5px;}
-  ::-webkit-scrollbar-track{background:var(--bg);}
-  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media(max-width:580px){.form-row,.add-fields,.result-grid{grid-template-columns:1fr 1fr;}.tab-btn{padding:10px 9px;font-size:.7rem;}.card-price{font-size:1.05rem;}}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 </style>
 </head>
 <body>
@@ -250,24 +243,16 @@
   <div class="pin-box">
     <div class="pin-icon">🔒</div>
     <div class="pin-title" id="pinTitle">Zone protégée</div>
-    <div class="pin-sub" id="pinSub">Entre ton PIN pour accéder à l'analyse IA</div>
+    <div class="pin-sub" id="pinSub">Entre ton PIN pour accéder à l'analyse</div>
     <div class="pin-dots" id="pinDots">
-      <div class="pin-dot" id="pd0"></div>
-      <div class="pin-dot" id="pd1"></div>
-      <div class="pin-dot" id="pd2"></div>
-      <div class="pin-dot" id="pd3"></div>
+      <div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
     </div>
     <div class="pin-error" id="pinError"></div>
     <div class="pin-pad">
-      <button class="pin-key" onclick="pinPress('1')">1</button>
-      <button class="pin-key" onclick="pinPress('2')">2</button>
-      <button class="pin-key" onclick="pinPress('3')">3</button>
-      <button class="pin-key" onclick="pinPress('4')">4</button>
-      <button class="pin-key" onclick="pinPress('5')">5</button>
-      <button class="pin-key" onclick="pinPress('6')">6</button>
-      <button class="pin-key" onclick="pinPress('7')">7</button>
-      <button class="pin-key" onclick="pinPress('8')">8</button>
-      <button class="pin-key" onclick="pinPress('9')">9</button>
+      <button class="pin-key" onclick="pinPress('1')">1</button><button class="pin-key" onclick="pinPress('2')">2</button><button class="pin-key" onclick="pinPress('3')">3</button>
+      <button class="pin-key" onclick="pinPress('4')">4</button><button class="pin-key" onclick="pinPress('5')">5</button><button class="pin-key" onclick="pinPress('6')">6</button>
+      <button class="pin-key" onclick="pinPress('7')">7</button><button class="pin-key" onclick="pinPress('8')">8</button><button class="pin-key" onclick="pinPress('9')">9</button>
       <button class="pin-key" onclick="pinPress('0')" style="grid-column:2">0</button>
       <button class="pin-key del" onclick="pinDel()">⌫</button>
     </div>
@@ -278,6 +263,7 @@
 <header>
   <h1>🎲 <span>Chasse aux</span> Jeux</h1>
   <div class="header-actions">
+    <button class="btn-export" id="btnExport">📥 CSV</button>
     <button class="toggle-bought" id="toggleBought">Afficher achetés</button>
     <button class="btn-add-top" id="openAdd">+ Ajouter</button>
   </div>
@@ -285,30 +271,33 @@
 
 <nav class="tabs">
   <button class="tab-btn active" data-tab="suivi">📋 Mes annonces</button>
-  <button class="tab-btn" data-tab="api">🤖 Analyse (avec clé API)</button>
-  <button class="tab-btn" data-tab="noapi">💬 Analyse (sans clé API)</button>
+  <button class="tab-btn" data-tab="api">🤖 Analyse (IA gratuite)</button>
+  <button class="tab-btn" data-tab="noapi">💬 Analyse (sans clé)</button>
 </nav>
 
-<!-- MODAL -->
+<!-- MODAL AJOUT MANUEL -->
 <div class="overlay" id="overlay">
   <div class="modal">
     <h2 id="modal-title">Nouvelle annonce</h2>
-    <div class="form-group"><label>Nom du jeu *</label><input type="text" id="f-name" placeholder="ex: Catan, Pandemic…"></div>
+    <div class="form-group"><label>Nom du jeu *</label><input type="text" id="f-name" placeholder="ex: Catan, Wingspan…"></div>
     <div class="form-row">
       <div class="form-group"><label>Prix (€) *</label><input type="number" id="f-price" placeholder="0" min="0" step="0.5"></div>
-      <div class="form-group"><label>Ville / CP</label><input type="text" id="f-city" placeholder="ex: Lyon 69000"></div>
+      <div class="form-group"><label>Ville / CP</label><input type="text" id="f-city" placeholder="ex: Marseille"></div>
     </div>
     <div class="form-row">
       <div class="form-group"><label>État *</label>
-        <select id="f-state"><option value="">— Choisir —</option><option value="TB">TB — Très bon</option><option value="B">B — Bon</option><option value="M">M — Moyen</option></select>
+        <select id="f-state"><option value="">—</option><option value="TB">TB — Très bon</option><option value="B">B — Bon</option><option value="M">M — Moyen</option></select>
       </div>
       <div class="form-group"><label>Plateforme *</label>
-        <select id="f-platform"><option value="">— Choisir —</option><option value="Leboncoin">Leboncoin</option><option value="Vinted">Vinted</option><option value="Okkazeo">Okkazeo</option></select>
+        <select id="f-platform"><option value="">—</option><option value="Leboncoin">Leboncoin</option><option value="Vinted">Vinted</option><option value="Okkazeo">Okkazeo</option></select>
       </div>
     </div>
     <div class="form-group"><label>Lien de l'annonce</label><input type="url" id="f-url" placeholder="https://…"></div>
+    <div class="form-group"><label>Édition</label>
+      <select id="f-edition"><option value="">— Non précisé —</option><option value="VF">VF — Version française</option><option value="VO">VO — Version originale</option><option value="KS">Kickstarter</option></select>
+    </div>
     <div class="modal-actions">
-      <button class="btn-cancel" id="cancelBtn">Annuler</button>
+      <button class="btn-cancel-modal" id="cancelBtn">Annuler</button>
       <button class="btn-save" id="saveBtn">💾 Sauvegarder</button>
     </div>
   </div>
@@ -349,27 +338,25 @@
     <div id="game-list"></div>
   </div>
 
-  <!-- ═══ ANALYSE AVEC API ═══ -->
+  <!-- ═══ ANALYSE AVEC CLÉ API ═══ -->
   <div class="tab-panel" id="tab-api">
 
-    <!-- Clé API -->
     <div class="api-setup">
       <div class="api-setup-header" id="apiToggle">
         <div class="api-setup-title"><div class="dot" id="apiDot"></div>🔑 Clé API OpenRouter (gratuite)</div>
-        <span id="apiToggleIcon" style="color:var(--muted);font-size:.78rem;">▼ Configurer</span>
+        <span id="apiToggleIcon" style="color:var(--muted);font-size:.76rem;">▼ Configurer</span>
       </div>
       <div class="api-setup-body hidden" id="apiBody">
         <div class="api-help-box">
-          <strong>Obtenir ta clé gratuite en 2 minutes :</strong><br><br>
-          1. Va sur <a href="https://openrouter.ai" target="_blank">openrouter.ai</a> → <strong>Sign in</strong> (compte Google ou GitHub)<br>
-          2. Clique sur ton avatar → <strong>Keys</strong> → <strong>Create Key</strong><br>
-          3. Copie la clé <strong>sk-or-…</strong><br>
-          4. Colle-la ci-dessous et sauvegarde<br><br>
-          ✅ <strong>100% gratuit</strong> — 200 analyses/jour, sans carte bancaire.<br>
-          Modèle utilisé : <strong>Llama 3.3 70B</strong> (niveau GPT-4, totalement gratuit).
+          <strong>Obtenir ta clé gratuite en 2 min :</strong><br><br>
+          1. Va sur <a href="https://openrouter.ai" target="_blank">openrouter.ai</a> → <strong>Sign in</strong> (Google ou GitHub)<br>
+          2. Ton avatar → <strong>Keys</strong> → <strong>Create Key</strong><br>
+          3. Copie la clé <strong>sk-or-…</strong> et colle-la ci-dessous<br><br>
+          ✅ <strong>Gratuit</strong> — 200 analyses/jour, sans carte bancaire.<br>
+          Modèles utilisés : Mistral Small → Gemma 27B → Llama 70B (fallback automatique).
         </div>
         <div class="form-group">
-          <label>Ta clé API OpenRouter</label>
+          <label>Ta clé OpenRouter</label>
           <div class="api-key-row">
             <input type="password" id="apiKeyInput" placeholder="sk-or-v1-…">
             <button class="btn-key-save" id="btnKeySave">Sauvegarder</button>
@@ -377,57 +364,35 @@
           <div class="key-status" id="keyStatus">Non configurée.</div>
           <button class="btn-key-del" id="btnKeyDel" style="display:none">🗑 Supprimer</button>
         </div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+          <button class="btn-key-del" style="width:100%;text-align:center;padding:8px" onclick="showPinSetup(null)">🔐 Changer / créer le PIN</button>
+        </div>
       </div>
     </div>
 
-    <!-- Formulaire -->
     <div class="analyse-block">
       <h3>📋 Remplis les infos de l'annonce</h3>
-
-      <div class="form-group">
-        <label>🎲 Nom du jeu *</label>
-        <input type="text" id="a-name" placeholder="ex: Wingspan, Terraforming Mars, Final Girl…">
-      </div>
-
+      <div class="form-group"><label>🎲 Nom du jeu *</label><input type="text" id="a-name" placeholder="ex: Wingspan, Terraforming Mars…"></div>
       <div class="form-row">
-        <div class="form-group">
-          <label>💶 Prix demandé (€) *</label>
-          <input type="number" id="a-price" placeholder="0" min="0" step="0.5">
-        </div>
-        <div class="form-group">
-          <label>📦 État *</label>
-          <select id="a-state">
-            <option value="">— Choisir —</option>
-            <option value="NF">Neuf / jamais joué</option>
-            <option value="TB">TB — Très bon état</option>
-            <option value="B">B — Bon état</option>
-            <option value="M">M — Moyen état</option>
-          </select>
+        <div class="form-group"><label>💶 Prix demandé (€) *</label><input type="number" id="a-price" placeholder="0" min="0" step="0.5"></div>
+        <div class="form-group"><label>📦 État *</label>
+          <select id="a-state"><option value="">—</option><option value="NF">Neuf / jamais joué</option><option value="TB">TB — Très bon</option><option value="B">B — Bon</option><option value="M">M — Moyen</option></select>
         </div>
       </div>
-
       <div class="form-row">
-        <div class="form-group">
-          <label>🛒 Plateforme</label>
-          <select id="a-platform">
-            <option value="">— Choisir —</option>
-            <option value="Leboncoin">Leboncoin</option>
-            <option value="Vinted">Vinted</option>
-            <option value="Okkazeo">Okkazeo</option>
-          </select>
+        <div class="form-group"><label>🛒 Plateforme</label>
+          <select id="a-platform"><option value="">—</option><option value="Leboncoin">Leboncoin</option><option value="Vinted">Vinted</option><option value="Okkazeo">Okkazeo</option></select>
         </div>
-        <div class="form-group">
-          <label>🔗 Lien annonce</label>
-          <input type="url" id="a-url" placeholder="https://…">
+        <div class="form-group"><label>🌍 Édition</label>
+          <select id="a-edition"><option value="">— Non précisé —</option><option value="VF">VF — Français</option><option value="VO">VO — Anglais</option><option value="KS">Kickstarter</option></select>
         </div>
       </div>
-
-      <div class="form-group">
-        <label style="color:var(--muted)">📝 Remarques <span style="font-size:.65rem;opacity:.7">(optionnel — ex: manque pièces, édition anglaise…)</span></label>
-        <textarea id="a-notes" placeholder="ex: boîte abîmée, extension incluse, cartes sleevées…" style="min-height:55px"></textarea>
+      <div class="form-row">
+        <div class="form-group"><label>🔗 Lien annonce</label><input type="url" id="a-url" placeholder="https://…"></div>
+        <div class="form-group"><label>📝 Remarques</label><input type="text" id="a-notes" placeholder="ex: manque pièces…"></div>
       </div>
-
       <button class="btn-analyse" id="btnAnalyse">🔍 Analyser la rentabilité</button>
+      <button class="btn-cancel-analyse" id="btnCancelAnalyse">⏹ Arrêter l'analyse</button>
     </div>
 
     <div id="analyseResult"></div>
@@ -438,7 +403,7 @@
       <div class="add-fields">
         <div class="form-group"><label>Nom *</label><input type="text" id="add-name"></div>
         <div class="form-group"><label>Prix (€) *</label><input type="number" id="add-price" min="0" step="0.5"></div>
-        <div class="form-group"><label>Ville / CP</label><input type="text" id="add-city" placeholder="ex: Marseille"></div>
+        <div class="form-group"><label>Ville</label><input type="text" id="add-city" placeholder="ex: Lyon"></div>
         <div class="form-group"><label>État *</label>
           <select id="add-state"><option value="">—</option><option value="TB">TB</option><option value="B">B</option><option value="M">M</option></select>
         </div>
@@ -449,50 +414,58 @@
       </div>
       <button class="btn-do-add" id="btnDoAdd">💾 Ajouter à ma liste</button>
     </div>
+
+    <div class="hist-section" id="histSection" style="display:none">
+      <div class="hist-title">Historique des analyses</div>
+      <div id="histList"></div>
+    </div>
   </div>
 
-  <!-- ═══ ANALYSE SANS API ═══ -->
+  <!-- ═══ ANALYSE SANS CLÉ ═══ -->
   <div class="tab-panel" id="tab-noapi">
-
     <div class="howto-box">
-      <div class="howto-box-title">💡 Comment ça marche sans clé API ?</div>
-      <div class="howto-step"><div class="howto-num">1</div><div>Remplis les infos de l'annonce ci-dessous — le message pour Claude est généré automatiquement.</div></div>
-      <div class="howto-step"><div class="howto-num">2</div><div>Clique <strong>Copier le message</strong> puis colle-le ici dans <strong>Claude.ai</strong> — Claude cherche les prix et donne son verdict.</div></div>
-      <div class="howto-step"><div class="howto-num">3</div><div>Si le score est bon, reviens ici et clique <strong>Ajouter à ma liste</strong> — tout est pré-rempli automatiquement.</div></div>
+      <div class="howto-box-title">💡 Comment ça marche</div>
+      <div class="howto-step"><div class="howto-num">1</div><div>Remplis les infos — le message Claude est généré automatiquement.</div></div>
+      <div class="howto-step"><div class="howto-num">2</div><div>Clique <strong>Copier</strong> puis colle dans <strong>Claude.ai</strong> — analyse complète avec recherche web.</div></div>
+      <div class="howto-step"><div class="howto-num">3</div><div>Si c'est bon, clique <strong>Ajouter à ma liste</strong> — tout est pré-rempli.</div></div>
     </div>
-
-    <!-- Formulaire sans API -->
     <div class="analyse-block">
-      <h3>📦 Colle le lien — l'IA fait le reste</h3>
-      <div class="form-group">
-        <label>🔗 Lien de l'annonce *</label>
-        <input type="url" id="na-url" placeholder="https://www.vinted.fr/items/… ou leboncoin.fr/… ou okkazeo.com/…">
-        <div id="naDetectedTag" style="margin-top:7px"></div>
+      <h3>📋 Infos de l'annonce</h3>
+      <div class="form-group"><label>🎲 Nom du jeu *</label><input type="text" id="na-name" placeholder="ex: Final Girl, Wingspan…"></div>
+      <div class="form-row">
+        <div class="form-group"><label>💶 Prix demandé (€)</label><input type="number" id="na-price" placeholder="0" min="0" step="0.5"></div>
+        <div class="form-group"><label>📦 État</label>
+          <select id="na-state"><option value="">—</option><option value="NF">Neuf</option><option value="TB">TB</option><option value="B">B</option><option value="M">M</option></select>
+        </div>
       </div>
-      <div class="form-group" style="margin-top:4px">
-        <label style="color:var(--muted)">📝 Infos supplémentaires <span style="font-size:.65rem;opacity:.7">(optionnel)</span></label>
-        <textarea id="na-notes" placeholder="ex: manque des pièces, édition anglaise, lot de 3 jeux…" style="min-height:55px"></textarea>
+      <div class="form-row">
+        <div class="form-group"><label>🛒 Plateforme</label>
+          <select id="na-platform"><option value="">—</option><option value="Leboncoin">Leboncoin</option><option value="Vinted">Vinted</option><option value="Okkazeo">Okkazeo</option></select>
+        </div>
+        <div class="form-group"><label>🌍 Édition</label>
+          <select id="na-edition"><option value="">—</option><option value="VF">VF</option><option value="VO">VO</option><option value="KS">Kickstarter</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>🔗 Lien</label><input type="url" id="na-url" placeholder="https://…"></div>
+        <div class="form-group"><label>📝 Remarques</label><input type="text" id="na-notes" placeholder="ex: manque pièces…"></div>
       </div>
     </div>
-
-    <!-- Message généré -->
     <div class="prompt-wrap" id="promptWrap" style="display:none">
-      <h3>📋 Message prêt à coller dans Claude.ai</h3>
+      <h3>📋 Message à copier dans Claude.ai</h3>
       <div class="prompt-box" id="promptBox"></div>
       <div class="prompt-actions">
-        <button class="btn-copy" id="btnCopy">📋 Copier le message</button>
+        <button class="btn-copy" id="btnCopy">📋 Copier</button>
         <a class="btn-claude" href="https://claude.ai" target="_blank" rel="noopener">Ouvrir Claude.ai ↗</a>
       </div>
     </div>
-
-    <!-- Ajouter à la liste (sans API) -->
     <div id="naAddBlock" style="display:none" class="add-block">
       <h3>✅ Ajouter à ma liste</h3>
-      <p>Complète les champs manquants si besoin (ville, état exact…) puis sauvegarde.</p>
+      <p>Complète les infos manquantes après l'analyse, puis sauvegarde.</p>
       <div class="add-fields">
         <div class="form-group"><label>Nom *</label><input type="text" id="na-add-name"></div>
         <div class="form-group"><label>Prix (€) *</label><input type="number" id="na-add-price" min="0" step="0.5"></div>
-        <div class="form-group"><label>Ville / CP</label><input type="text" id="na-add-city" placeholder="ex: Marseille"></div>
+        <div class="form-group"><label>Ville</label><input type="text" id="na-add-city"></div>
         <div class="form-group"><label>État *</label>
           <select id="na-add-state"><option value="">—</option><option value="TB">TB</option><option value="B">B</option><option value="M">M</option></select>
         </div>
@@ -503,71 +476,76 @@
       </div>
       <button class="btn-do-add" id="naBtnDoAdd">💾 Ajouter à ma liste</button>
     </div>
-
   </div>
+
 </main>
 
 <script>
 // ═══════════════════════════════════
-// STORAGE & UTILS
+// STORAGE
 // ═══════════════════════════════════
-const SK = 'chasse-jeux-v1';
-const AK = 'chasse-jeux-apikey';
-let games = JSON.parse(localStorage.getItem(SK) || '[]');
-let editId = null, showBought = false, currentFilter = 'all';
-const save   = () => localStorage.setItem(SK, JSON.stringify(games));
-const uid    = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
-const esc    = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const getKey = () => localStorage.getItem(AK) || '';
+const SK='chasse-jeux-v1', AK='chasse-jeux-apikey', HK='chasse-jeux-hist', PK='chasse-jeux-pin';
+let games=JSON.parse(localStorage.getItem(SK)||'[]');
+let hist=JSON.parse(localStorage.getItem(HK)||'[]');
+let editId=null, showBought=false, currentFilter='all';
+
+const save=()=>localStorage.setItem(SK,JSON.stringify(games));
+const saveHist=()=>localStorage.setItem(HK,JSON.stringify(hist.slice(0,30)));
+const uid=()=>Math.random().toString(36).slice(2)+Date.now().toString(36);
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const getKey=()=>localStorage.getItem(AK)||'';
 
 // ═══════════════════════════════════
 // SCORE
 // ═══════════════════════════════════
-function computeScore(g, all) {
-  const px = all.map(x=>x.price).filter(p=>p>0);
-  if (!px.length) return 50;
-  const mx=Math.max(...px), mn=Math.min(...px), rng=mx-mn||1;
-  return Math.round((100-((g.price-mn)/rng)*100)*0.6 + ({TB:100,B:65,M:30}[g.state]??50)*0.4);
+function computeScore(g,all){
+  const px=all.map(x=>x.price).filter(p=>p>0);
+  if(!px.length)return 50;
+  const mx=Math.max(...px),mn=Math.min(...px),rng=mx-mn||1;
+  return Math.round((100-((g.price-mn)/rng)*100)*0.6+({TB:100,B:65,M:30}[g.state]??50)*0.4);
 }
 
 // ═══════════════════════════════════
-// RENDER SUIVI
+// RENDER
 // ═══════════════════════════════════
-function render() {
+function render(){
   updateStats();
-  let list = games.map(g=>({...g,score:computeScore(g,games)}));
-  if (!showBought) list = list.filter(g=>!g.bought);
-  if (currentFilter!=='all') list = list.filter(g=>g.platform===currentFilter||g.state===currentFilter);
-  const s = document.getElementById('sortSelect').value;
-  if(s==='score') list.sort((a,b)=>b.score-a.score);
-  else if(s==='price_asc') list.sort((a,b)=>a.price-b.price);
-  else if(s==='price_desc') list.sort((a,b)=>b.price-a.price);
-  else if(s==='name') list.sort((a,b)=>a.name.localeCompare(b.name));
+  let list=games.map(g=>({...g,score:computeScore(g,games)}));
+  if(!showBought)list=list.filter(g=>!g.bought);
+  if(currentFilter!=='all')list=list.filter(g=>g.platform===currentFilter||g.state===currentFilter);
+  const s=document.getElementById('sortSelect').value;
+  if(s==='score')list.sort((a,b)=>b.score-a.score);
+  else if(s==='price_asc')list.sort((a,b)=>a.price-b.price);
+  else if(s==='price_desc')list.sort((a,b)=>b.price-a.price);
+  else if(s==='name')list.sort((a,b)=>a.name.localeCompare(b.name));
   else list.sort((a,b)=>b.createdAt-a.createdAt);
-  const c = document.getElementById('game-list');
-  document.getElementById('listCount').textContent = `${list.length} annonce${list.length!==1?'s':''}`;
+  const c=document.getElementById('game-list');
+  document.getElementById('listCount').textContent=`${list.length} annonce${list.length!==1?'s':''}`;
   if(!list.length){c.innerHTML=`<div class="empty"><span>🎲</span>Aucune annonce.<br>Ajoutez votre première chasse !</div>`;return;}
-  c.innerHTML = list.map(g=>cardHTML(g)).join('');
+  c.innerHTML=list.map(g=>cardHTML(g)).join('');
   c.querySelectorAll('.btn-sm.del').forEach(b=>b.addEventListener('click',()=>delGame(b.dataset.id)));
   c.querySelectorAll('.btn-sm.edit').forEach(b=>b.addEventListener('click',()=>openEdit(b.dataset.id)));
   c.querySelectorAll('[type="checkbox"]').forEach(cb=>cb.addEventListener('change',()=>toggleBought(cb.dataset.id,cb.checked)));
   c.querySelectorAll('.btn-sm.ana').forEach(b=>b.addEventListener('click',()=>prefillAnalyse(b.dataset.id)));
 }
 
-const plCls = p=>({Leboncoin:'badge-lbc',Vinted:'badge-vinted',Okkazeo:'badge-okk'}[p]||'');
-const stCls = s=>({TB:'badge-tb',B:'badge-b',M:'badge-m'}[s]||'');
+const plCls=p=>({Leboncoin:'badge-lbc',Vinted:'badge-vinted',Okkazeo:'badge-okk'}[p]||'');
+const stCls=s=>({TB:'badge-tb',B:'badge-b',M:'badge-m'}[s]||'');
 
-function cardHTML(g) {
-  const link = g.url?`<a href="${esc(g.url)}" target="_blank" rel="noopener">🔗 Annonce</a>`:'';
-  const city = g.city?`📍 ${esc(g.city)}`:'';
+function cardHTML(g){
+  const city=g.city?`📍 ${esc(g.city)}`:'';
+  const edition=g.edition?`<span class="badge" style="background:rgba(124,92,191,.12);color:var(--accent2);border:1px solid rgba(124,92,191,.25)">${esc(g.edition)}</span>`:'';
+  const linkBtn=g.url?`<a class="card-link" href="${esc(g.url)}" target="_blank" rel="noopener">🔗 Voir l'annonce</a>`:'';
   return `<div class="card ${g.bought?'bought':''}" data-id="${g.id}">
     <div class="card-left">
       <div class="card-top">
         <span class="card-name">${esc(g.name)}</span>
         <span class="badge ${plCls(g.platform)}">${esc(g.platform)}</span>
         <span class="badge ${stCls(g.state)}">${esc(g.state)}</span>
+        ${edition}
       </div>
-      <div class="card-meta">${city}${link}</div>
+      ${linkBtn}
+      <div class="card-meta">${city}</div>
       <div class="card-actions">
         <label class="check-label"><input type="checkbox" data-id="${g.id}" ${g.bought?'checked':''}>Acheté</label>
         <button class="btn-sm edit" data-id="${g.id}">✏️</button>
@@ -582,8 +560,8 @@ function cardHTML(g) {
   </div>`;
 }
 
-function updateStats() {
-  const total=games.length, bought=games.filter(g=>g.bought).length;
+function updateStats(){
+  const total=games.length,bought=games.filter(g=>g.bought).length;
   const px=games.filter(g=>!g.bought&&g.price>0).map(g=>g.price);
   const avg=px.length?(px.reduce((a,b)=>a+b,0)/px.length).toFixed(2)+'€':'—';
   const sc=games.map(g=>computeScore(g,games));
@@ -598,25 +576,119 @@ function updateStats() {
 // ═══════════════════════════════════
 // CRUD
 // ═══════════════════════════════════
-function getForm(){return{name:document.getElementById('f-name').value.trim(),price:parseFloat(document.getElementById('f-price').value)||0,city:document.getElementById('f-city').value.trim(),state:document.getElementById('f-state').value,platform:document.getElementById('f-platform').value,url:document.getElementById('f-url').value.trim()};}
+function getForm(){return{name:document.getElementById('f-name').value.trim(),price:parseFloat(document.getElementById('f-price').value)||0,city:document.getElementById('f-city').value.trim(),state:document.getElementById('f-state').value,platform:document.getElementById('f-platform').value,url:document.getElementById('f-url').value.trim(),edition:document.getElementById('f-edition').value};}
 function validForm(v){if(!v.name){alert('Nom requis.');return false;}if(!v.state){alert('État requis.');return false;}if(!v.platform){alert('Plateforme requise.');return false;}return true;}
 function saveGame(){const v=getForm();if(!validForm(v))return;if(editId){const i=games.findIndex(g=>g.id===editId);if(i!==-1)games[i]={...games[i],...v};}else games.push({id:uid(),createdAt:Date.now(),bought:false,...v});save();closeModal();render();}
 function delGame(id){if(!confirm('Supprimer ?'))return;games=games.filter(g=>g.id!==id);save();render();}
 function toggleBought(id,ch){const g=games.find(g=>g.id===id);if(g){g.bought=ch;save();render();}}
 function openAdd(){editId=null;document.getElementById('modal-title').textContent='Nouvelle annonce';clearForm();document.getElementById('overlay').classList.add('open');}
-function openEdit(id){const g=games.find(g=>g.id===id);if(!g)return;editId=id;document.getElementById('modal-title').textContent="Modifier l'annonce";['name','price','city','state','platform','url'].forEach(k=>document.getElementById('f-'+k).value=g[k]||'');document.getElementById('overlay').classList.add('open');}
+function openEdit(id){const g=games.find(g=>g.id===id);if(!g)return;editId=id;document.getElementById('modal-title').textContent="Modifier l'annonce";['name','price','city','state','platform','url','edition'].forEach(k=>{const el=document.getElementById('f-'+k);if(el)el.value=g[k]||'';});document.getElementById('overlay').classList.add('open');}
 function closeModal(){document.getElementById('overlay').classList.remove('open');clearForm();editId=null;}
-function clearForm(){['f-name','f-price','f-city','f-url'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-state').value='';document.getElementById('f-platform').value='';}
+function clearForm(){['f-name','f-price','f-city','f-url'].forEach(id=>document.getElementById(id).value='');['f-state','f-platform','f-edition'].forEach(id=>document.getElementById(id).value='');}
 
 // ═══════════════════════════════════
-// TABS
+// EXPORT CSV
 // ═══════════════════════════════════
-document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',function(){
+document.getElementById('btnExport').addEventListener('click',()=>{
+  if(!games.length){alert('Aucune annonce à exporter.');return;}
+  const rows=[['Nom','Prix €','État','Plateforme','Édition','Ville','Lien','Acheté','Score']];
+  games.forEach(g=>{
+    rows.push([g.name,g.price,g.state,g.platform,g.edition||'',g.city||'',g.url||'',g.bought?'Oui':'Non',computeScore(g,games)]);
+  });
+  const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='chasse-aux-jeux.csv';
+  a.click();
+});
+
+// ═══════════════════════════════════
+// TABS + PIN
+// ═══════════════════════════════════
+function switchTab(tabName){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  this.classList.add('active');
-  document.getElementById('tab-'+this.dataset.tab).classList.add('active');
+  document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+  document.getElementById('tab-'+tabName).classList.add('active');
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',function(){
+  const tab=this.dataset.tab;
+  if(tab==='api'||tab==='noapi'){
+    requirePin(()=>switchTab(tab));
+  } else {
+    switchTab(tab);
+  }
 }));
+
+// ═══════════════════════════════════
+// PIN LOCK
+// ═══════════════════════════════════
+let pinBuffer='',pinMode='verify',pinTemp='',pinCb=null;
+const getPin=()=>localStorage.getItem(PK)||'';
+const hashPin=p=>{let h=0;for(let i=0;i<p.length;i++)h=(Math.imul(31,h)+p.charCodeAt(i))|0;return h.toString(36);};
+const pinOk=()=>sessionStorage.getItem('pin-ok')==='1';
+const pinUnlock=()=>sessionStorage.setItem('pin-ok','1');
+
+function requirePin(cb){
+  if(!getPin()){showPinSetup(cb);return;}
+  if(pinOk()){cb();return;}
+  pinCb=cb;pinMode='verify';pinBuffer='';
+  document.getElementById('pinTitle').textContent='Zone protégée';
+  document.getElementById('pinSub').textContent='Entre ton PIN pour accéder à l\'analyse';
+  document.getElementById('pinError').textContent='';
+  document.getElementById('pinFooter').innerHTML=`<span class="pin-setup-link" onclick="showPinSetup(null)">Changer le PIN</span>`;
+  updatePinDots();
+  document.getElementById('pinOverlay').classList.add('show');
+}
+
+function showPinSetup(cb){
+  pinCb=cb;pinMode='setup';pinBuffer='';pinTemp='';
+  document.getElementById('pinTitle').textContent=getPin()?'Changer le PIN':'Créer un PIN';
+  document.getElementById('pinSub').textContent='Choisis un code à 4 chiffres';
+  document.getElementById('pinError').textContent='';
+  document.getElementById('pinFooter').innerHTML=`<span class="pin-setup-link" onclick="closePinOverlay()">Annuler</span>`;
+  updatePinDots();
+  document.getElementById('pinOverlay').classList.add('show');
+}
+
+function closePinOverlay(){document.getElementById('pinOverlay').classList.remove('show');pinBuffer='';}
+
+function updatePinDots(){for(let i=0;i<4;i++)document.getElementById('pd'+i).classList.toggle('filled',i<pinBuffer.length);}
+
+function pinPress(d){
+  if(pinBuffer.length>=4)return;
+  pinBuffer+=d;updatePinDots();
+  document.getElementById('pinError').textContent='';
+  if(pinBuffer.length===4)setTimeout(pinSubmit,130);
+}
+
+function pinDel(){pinBuffer=pinBuffer.slice(0,-1);updatePinDots();}
+
+function pinSubmit(){
+  if(pinMode==='verify'){
+    if(hashPin(pinBuffer)===getPin()){pinUnlock();closePinOverlay();if(pinCb)pinCb();}
+    else{document.getElementById('pinError').textContent='❌ PIN incorrect.';pinBuffer='';updatePinDots();}
+  } else if(pinMode==='setup'){
+    pinTemp=pinBuffer;pinBuffer='';pinMode='confirm';
+    document.getElementById('pinTitle').textContent='Confirme le PIN';
+    document.getElementById('pinSub').textContent='Retape le même code';
+    document.getElementById('pinError').textContent='';
+    updatePinDots();
+  } else if(pinMode==='confirm'){
+    if(pinBuffer===pinTemp){
+      localStorage.setItem(PK,hashPin(pinBuffer));pinUnlock();closePinOverlay();
+      if(pinCb)pinCb();else alert('✅ PIN enregistré !');
+    } else {
+      document.getElementById('pinError').textContent='❌ Codes différents.';
+      pinBuffer='';pinTemp='';pinMode='setup';
+      document.getElementById('pinTitle').textContent=getPin()?'Changer le PIN':'Créer un PIN';
+      document.getElementById('pinSub').textContent='Choisis un code à 4 chiffres';
+      updatePinDots();
+    }
+  }
+}
 
 // ═══════════════════════════════════
 // API KEY UI
@@ -624,159 +696,169 @@ document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',
 function initKeyUI(){
   const key=getKey();
   document.getElementById('apiDot').classList.toggle('ok',!!key);
-  document.getElementById('keyStatus').textContent=key?'✅ Clé configurée et prête.':'Non configurée.';
+  document.getElementById('keyStatus').textContent=key?'✅ Clé configurée.':'Non configurée.';
   document.getElementById('keyStatus').className=key?'key-status ok':'key-status';
   document.getElementById('btnKeyDel').style.display=key?'inline-block':'none';
   document.getElementById('apiToggleIcon').textContent=key?'▼ Modifier':'▲ Masquer';
-  if(key){document.getElementById('apiKeyInput').value='••••••••••••••••••••••••';document.getElementById('apiBody').classList.add('hidden');}
+  if(key){document.getElementById('apiKeyInput').value='••••••••••••••••••••';document.getElementById('apiBody').classList.add('hidden');}
   else document.getElementById('apiBody').classList.remove('hidden');
 }
+
 document.getElementById('apiToggle').addEventListener('click',()=>{
   const body=document.getElementById('apiBody');
-  const hidden=body.classList.toggle('hidden');
-  document.getElementById('apiToggleIcon').textContent=hidden?'▼ Modifier':'▲ Masquer';
+  const h=body.classList.toggle('hidden');
+  document.getElementById('apiToggleIcon').textContent=h?'▼ Modifier':'▲ Masquer';
 });
+
 document.getElementById('btnKeySave').addEventListener('click',()=>{
   const val=document.getElementById('apiKeyInput').value.trim();
-  if(!val||val.includes('•')){setKeyStatus('Entre une vraie clé.','err');return;}
-  if(!val.startsWith('sk-or-')){setKeyStatus('La clé OpenRouter doit commencer par sk-or-…','err');return;}
+  if(!val||val.includes('•')){setKS('Entre une vraie clé.','err');return;}
+  if(!val.startsWith('sk-or-')){setKS('Doit commencer par sk-or-…','err');return;}
   localStorage.setItem(AK,val);initKeyUI();
 });
+
 document.getElementById('btnKeyDel').addEventListener('click',()=>{
   if(!confirm('Supprimer la clé ?'))return;
   localStorage.removeItem(AK);document.getElementById('apiKeyInput').value='';initKeyUI();
 });
-function setKeyStatus(msg,cls){const el=document.getElementById('keyStatus');el.textContent=msg;el.className='key-status '+cls;}
 
-// ═══════════════════════════════════
-// DETECT PLATFORM
-// ═══════════════════════════════════
-function detectPlatform(url){
-  if(!url)return'';
-  if(url.includes('leboncoin.fr'))return'Leboncoin';
-  if(url.includes('vinted.fr')||url.includes('vinted.com'))return'Vinted';
-  if(url.includes('okkazeo.com'))return'Okkazeo';
-  return'';
-}
-function applyDetect(url,platformEl,tagEl){
-  const pl=detectPlatform(url);
-  if(pl){document.getElementById(platformEl).value=pl;document.getElementById(tagEl).innerHTML=`<span class="detected-tag">✅ ${pl} détecté</span>`;}
-  return pl;
-}
-document.getElementById('na-url').addEventListener('change',updatePrompt);
+function setKS(msg,cls){const el=document.getElementById('keyStatus');el.textContent=msg;el.className='key-status '+cls;}
 
 // ═══════════════════════════════════
 // PREFILL DEPUIS CARTE
 // ═══════════════════════════════════
 function prefillAnalyse(id){
-  const g=games.find(g=>g.id===id); if(!g) return;
-  document.getElementById('a-name').value     = g.name||'';
-  document.getElementById('a-price').value    = g.price||'';
-  document.getElementById('a-state').value    = g.state||'';
-  document.getElementById('a-platform').value = g.platform||'';
-  document.getElementById('a-url').value      = g.url||'';
-  document.getElementById('na-url').value     = g.url||'';
-  const tabTarget=getKey()?'api':'noapi';
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelector(`[data-tab="${tabTarget}"]`).classList.add('active');
-  document.getElementById('tab-'+tabTarget).classList.add('active');
-  document.getElementById('analyseResult').innerHTML='';
-  document.getElementById('addBlock').style.display='none';
-  updatePrompt();
-  setTimeout(()=>document.getElementById('a-name').scrollIntoView({behavior:'smooth',block:'center'}),100);
+  const g=games.find(g=>g.id===id);if(!g)return;
+  requirePin(()=>{
+    document.getElementById('a-name').value=g.name||'';
+    document.getElementById('a-price').value=g.price||'';
+    document.getElementById('a-state').value=g.state||'';
+    document.getElementById('a-platform').value=g.platform||'';
+    document.getElementById('a-url').value=g.url||'';
+    document.getElementById('a-edition').value=g.edition||'';
+    document.getElementById('na-name').value=g.name||'';
+    document.getElementById('na-price').value=g.price||'';
+    document.getElementById('na-state').value=g.state||'';
+    document.getElementById('na-platform').value=g.platform||'';
+    document.getElementById('na-url').value=g.url||'';
+    document.getElementById('na-edition').value=g.edition||'';
+    switchTab(getKey()?'api':'noapi');
+    updatePrompt();
+    setTimeout(()=>document.getElementById('a-name').scrollIntoView({behavior:'smooth',block:'center'}),100);
+  });
 }
 
 // ═══════════════════════════════════
-// ANALYSE AVEC API
+// ANALYSE IA
 // ═══════════════════════════════════
-const SYSTEM=`Tu es un expert en jeux de societe d'occasion sur le marche francais. Tu connais les prix habituels sur Vinted, Leboncoin, Okkazeo, Philibert, Amazon FR.
-Regles: ne pas payer plus de 65% du prix revente occasion. Frais Mondial Relay selon poids estime: <500g=3.49 <1kg=4.29 <2kg=4.79 <5kg=5.49 <10kg=6.49 EUR.
-VERDICT: ACHETE si prix+MR <= 65% prix occasion. NEGOCIE si legerement au-dessus. PASSE si trop cher.
-Reponds UNIQUEMENT avec JSON valide, sans texte avant ou apres:
+const SYSTEM=`Expert jeux de societe d'occasion france. Prix habituels: Vinted, Leboncoin, Okkazeo, Philibert, Amazon FR.
+Regles: max 65% du prix revente occasion. Frais Mondial Relay: <500g=3.49 <1kg=4.29 <2kg=4.79 <5kg=5.49 <10kg=6.49 EUR.
+ACHETE si prix+MR<=65% prix occasion. NEGOCIE si legerement au-dessus. PASSE si trop cher.
+Reponds UNIQUEMENT en JSON valide sans texte autour:
 {"prix_neuf":"","prix_occasion_moyen":"","frais_mr":"","prix_max_avec_mr":"","marge":"","revente":"Facile/Moyenne/Difficile","raison_revente":"","verdict":"ACHETE/NEGOCIE/PASSE","justification":"","conseil":"","attention":""}`;
 
-document.getElementById('btnAnalyse').addEventListener('click', runAnalyse);
+const MODELS=[
+  'mistralai/mistral-small-3.1-24b-instruct:free',
+  'google/gemma-3-27b-it:free',
+  'meta-llama/llama-3.3-70b-instruct:free'
+];
+
+let currentAbort=null;
+
+document.getElementById('btnAnalyse').addEventListener('click',runAnalyse);
+document.getElementById('btnCancelAnalyse').addEventListener('click',()=>{
+  if(currentAbort){currentAbort.abort();currentAbort=null;}
+});
 
 async function runAnalyse(){
   const key=getKey();
   if(!key){
     document.getElementById('apiBody').classList.remove('hidden');
     document.getElementById('apiToggleIcon').textContent='▲ Masquer';
-    alert('Configure d\'abord ta clé API en haut de cette page.\nSi tu n\'en as pas, utilise l\'onglet "Sans clé API".');
+    alert('Configure ta clé OpenRouter en haut.\nSinon utilise l\'onglet "Sans clé".');
     return;
   }
-  const name    = document.getElementById('a-name').value.trim();
-  const price   = parseFloat(document.getElementById('a-price').value)||0;
-  const state   = document.getElementById('a-state').value;
-  const platform= document.getElementById('a-platform').value;
-  const url     = document.getElementById('a-url').value.trim();
-  const notes   = document.getElementById('a-notes').value.trim();
+  const name=document.getElementById('a-name').value.trim();
+  const price=parseFloat(document.getElementById('a-price').value)||0;
+  const state=document.getElementById('a-state').value;
+  const platform=document.getElementById('a-platform').value;
+  const edition=document.getElementById('a-edition').value;
+  const url=document.getElementById('a-url').value.trim();
+  const notes=document.getElementById('a-notes').value.trim();
 
-  if(!name) { alert('Entre le nom du jeu.'); return; }
-  if(!price){ alert('Entre le prix demandé.'); return; }
-  if(!state){ alert('Sélectionne l\'état.'); return; }
+  if(!name){alert('Entre le nom du jeu.');return;}
+  if(!price){alert('Entre le prix demandé.');return;}
+  if(!state){alert('Sélectionne l\'état.');return;}
 
-  const stateLabel = {'NF':'Neuf / jamais joué','TB':'Très bon état','B':'Bon état','M':'Moyen état'}[state]||state;
-
-  const msg = `Jeu: ${name}
-Prix demande: ${price}EUR
-Etat: ${stateLabel}${platform?'\nPlateforme: '+platform:''}${notes?'\nRemarques: '+notes:''}
-Donne ton analyse JSON de rentabilite pour ce jeu d'occasion.`;
+  const stLbl={'NF':'Neuf/jamais joué','TB':'Très bon état','B':'Bon état','M':'Moyen état'}[state]||state;
+  const msg=`Jeu: ${name}\nPrix: ${price}EUR\nEtat: ${stLbl}${edition?'\nEdition: '+edition:''}${platform?'\nPlateforme: '+platform:''}${notes?'\nRemarques: '+notes:''}\nJSON rentabilite.`;
 
   const res=document.getElementById('analyseResult');
-  res.innerHTML=`<div class="loading-pulse"><div class="pulse-dot"></div><div class="pulse-dot"></div><div class="pulse-dot"></div><span>Analyse en cours…</span></div>`;
+  const btnA=document.getElementById('btnAnalyse');
+  const btnC=document.getElementById('btnCancelAnalyse');
   document.getElementById('addBlock').style.display='none';
-  const btn=document.getElementById('btnAnalyse');
-  btn.disabled=true; btn.textContent='⏳ En cours…';
+  btnA.style.display='none';
+  btnC.style.display='block';
 
-  try{
-    const resp=await fetch('https://openrouter.ai/api/v1/chat/completions',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':'Bearer '+key,
-        'HTTP-Referer':'https://aleheat.github.io/Track-jeux/',
-        'X-Title':'Chasse aux Jeux'
-      },
-      body:JSON.stringify({
-        model:'meta-llama/llama-3.3-70b-instruct:free',
-        max_tokens:400,
-        messages:[
-          {role:'system',content:SYSTEM},
-          {role:'user',content:msg}
-        ]
-      })
-    });
-    const data=await resp.json();
-    if(!resp.ok) throw new Error(data?.error?.message||'Erreur API '+resp.status);
-    const text=data?.choices?.[0]?.message?.content||'';
-    if(!text) throw new Error('Aucune réponse reçue. Vérifie ta clé OpenRouter.');
-    const match=text.match(/\{[\s\S]*\}/);
-    if(!match) throw new Error('Format inattendu. Réessaie.');
-    const r=JSON.parse(match[0]);
-    if(r.verdict==='ACHETE')  r.verdict='ACHÈTE';
-    if(r.verdict==='NEGOCIE') r.verdict='NÉGOCIE';
-    showResult(r, name, price, state, platform, url);
-  }catch(err){
-    console.error(err);
-    let hint='';
-    if(err.message.includes('401')||err.message.includes('auth'))  hint='<br><br>💡 Clé invalide — va sur openrouter.ai → Keys et crée une nouvelle clé sk-or-…';
-    else if(err.message.includes('402')||err.message.includes('credit')||err.message.includes('balance')) hint='<br><br>💡 Limite atteinte. Les modèles gratuits ont 200 requêtes/jour. Réessaie demain ou crée un nouveau compte.';
-    else if(err.message.includes('429')) hint='<br><br>💡 Trop de requêtes, attends quelques secondes (limite : 20/min).';
-    else if(err.message.includes('fetch')||err.message.includes('Failed')) hint='<br><br>💡 Erreur réseau. Vérifie ta connexion.';
-  }finally{
-    btn.disabled=false; btn.textContent='🔍 Analyser la rentabilité';
+  let success=false;
+
+  for(let i=0;i<MODELS.length&&!success;i++){
+    const model=MODELS[i];
+    res.innerHTML=`<div class="loading-pulse"><div class="pulse-dot"></div><div class="pulse-dot"></div><div class="pulse-dot"></div><span>${i===0?'Analyse en cours…':'Autre modèle en cours…'}</span></div>`;
+
+    currentAbort=new AbortController();
+    const tid=setTimeout(()=>{if(currentAbort)currentAbort.abort();},25000);
+
+    try{
+      const resp=await fetch('https://openrouter.ai/api/v1/chat/completions',{
+        method:'POST',signal:currentAbort.signal,
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'HTTP-Referer':'https://aleheat.github.io/Track-jeux/','X-Title':'Chasse aux Jeux'},
+        body:JSON.stringify({model,max_tokens:400,messages:[{role:'system',content:SYSTEM},{role:'user',content:msg}]})
+      });
+      clearTimeout(tid);
+      const data=await resp.json();
+      if(!resp.ok)throw new Error(data?.error?.message||'Erreur '+resp.status);
+      const text=data?.choices?.[0]?.message?.content||'';
+      if(!text)throw new Error('Réponse vide.');
+      const s=text.indexOf('{'),e=text.lastIndexOf('}');
+      if(s===-1||e===-1)throw new Error('JSON introuvable.');
+      const r=JSON.parse(text.slice(s,e+1));
+      if(r.verdict==='ACHETE')r.verdict='ACHÈTE';
+      if(r.verdict==='NEGOCIE')r.verdict='NÉGOCIE';
+      showResult(r,name,price,state,platform,url);
+      // Sauvegarder dans l'historique
+      hist.unshift({id:uid(),date:Date.now(),name,price,verdict:r.verdict,r});
+      saveHist();renderHist();
+      success=true;
+    }catch(err){
+      clearTimeout(tid);
+      if(err.name==='AbortError'&&!currentAbort){
+        // Annulation utilisateur
+        res.innerHTML=`<div class="error-box"><div class="error-title">⏹ Arrêté</div><div class="error-msg">Analyse annulée.</div></div>`;
+        break;
+      }
+      if(i===MODELS.length-1&&!success){
+        let hint='';
+        if(err.message.includes('401'))hint='<br><br>💡 Clé invalide — vérifie sur openrouter.ai';
+        else if(err.message.includes('429'))hint='<br><br>💡 Limite 200/jour atteinte. Réessaie demain.';
+        else if(err.name==='AbortError')hint='<br><br>💡 Timeout (25s). Serveurs chargés, réessaie.';
+        res.innerHTML=`<div class="error-box"><div class="error-title">❌ Erreur</div><div class="error-msg">${esc(err.message)}${hint}</div></div>`;
+      }
+    }
   }
+
+  currentAbort=null;
+  btnA.style.display='block';
+  btnC.style.display='none';
 }
 
-function showResult(r, origName, origPrice, origState, origPlatform, origUrl){
+function showResult(r,origName,origPrice,origState,origPlatform,origUrl){
   const vCls=({ACHÈTE:'v-achete',NÉGOCIE:'v-negocie',PASSE:'v-passe'})[r.verdict]||'v-negocie';
   const revCls=({Facile:'rev-facile',Moyenne:'rev-moyenne',Difficile:'rev-difficile'})[r.revente]||'rev-moyenne';
   const maxNum=parseFloat(String(r.prix_max_avec_mr||'').replace(/[^\d.,]/g,'').replace(',','.'))||0;
   const margeNum=parseFloat(String(r.marge||'').replace(/[^\d.,-]/g,'').replace(',','.'))||0;
-  const priceCls=origPrice&&maxNum?(origPrice<=maxNum?'g':'r'):'';
-  const stateShort={'NF':'NF','TB':'TB','B':'B','M':'M'}[origState]||origState;
+  const pCls=origPrice&&maxNum?(origPrice<=maxNum?'g':'r'):'';
+  const stShort={'NF':'TB','TB':'TB','B':'B','M':'M'}[origState]||origState;
 
   document.getElementById('analyseResult').innerHTML=`
 <div class="result-wrap"><div class="result-card">
@@ -785,7 +867,7 @@ function showResult(r, origName, origPrice, origState, origPlatform, origUrl){
     <div class="vp ${vCls}">${r.verdict}</div>
   </div>
   <div class="result-grid">
-    <div class="rcell"><div class="rcell-label">Prix demandé</div><div class="rcell-val ${priceCls}">${origPrice.toFixed(2)}€</div></div>
+    <div class="rcell"><div class="rcell-label">Prix demandé</div><div class="rcell-val ${pCls}">${origPrice.toFixed(2)}€</div></div>
     <div class="rcell"><div class="rcell-label">Prix neuf</div><div class="rcell-val">${esc(r.prix_neuf)}</div></div>
     <div class="rcell"><div class="rcell-label">Prix occasion moyen</div><div class="rcell-val">${esc(r.prix_occasion_moyen)}</div></div>
     <div class="rcell"><div class="rcell-label">Frais Mondial Relay</div><div class="rcell-val">${esc(r.frais_mr)}</div></div>
@@ -801,22 +883,47 @@ function showResult(r, origName, origPrice, origState, origPlatform, origUrl){
   <div class="result-footer">🚚 <span>Mondial Relay</span> — frais intégrés dans le calcul du prix max.</div>
 </div></div>`;
 
-  // Pré-remplir "Ajouter à ma liste"
-  document.getElementById('add-name').value    = origName;
-  document.getElementById('add-price').value   = origPrice;
-  document.getElementById('add-state').value   = stateShort === 'NF' ? 'TB' : stateShort;
-  document.getElementById('add-platform').value= origPlatform||'';
-  document.getElementById('add-url').value     = origUrl||'';
-  document.getElementById('add-city').value    = '';
+  document.getElementById('add-name').value=origName;
+  document.getElementById('add-price').value=origPrice;
+  document.getElementById('add-state').value=stShort;
+  document.getElementById('add-platform').value=origPlatform||'';
+  document.getElementById('add-url').value=origUrl||'';
+  document.getElementById('add-city').value='';
   document.getElementById('addBlock').style.display='block';
   document.getElementById('analyseResult').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 // ═══════════════════════════════════
-// AJOUTER À LA LISTE (API)
+// HISTORIQUE ANALYSES
 // ═══════════════════════════════════
-function addToList(nameId,priceId,cityId,stateId,platformId,urlId,btnId){
-  const v={name:document.getElementById(nameId).value.trim(),price:parseFloat(document.getElementById(priceId).value)||0,city:document.getElementById(cityId).value.trim(),state:document.getElementById(stateId).value,platform:document.getElementById(platformId).value,url:document.getElementById(urlId).value.trim()};
+function renderHist(){
+  const sec=document.getElementById('histSection');
+  const list=document.getElementById('histList');
+  if(!hist.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  list.innerHTML=hist.slice(0,10).map(h=>{
+    const vcls=({ACHÈTE:'hv-a',NÉGOCIE:'hv-n',PASSE:'hv-p'})[h.verdict]||'hv-n';
+    const date=new Date(h.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+    return `<div class="hist-item" data-hid="${h.id}">
+      <div class="hist-name">${esc(h.name)}</div>
+      <div class="hist-price">${h.price.toFixed(2)}€</div>
+      <span class="hist-vp ${vcls}">${h.verdict}</span>
+      <div class="hist-date">${date}</div>
+    </div>`;
+  }).join('');
+  list.querySelectorAll('.hist-item').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const h=hist.find(x=>x.id===el.dataset.hid);
+      if(h){showResult(h.r,h.name,h.price,'','','');document.getElementById('analyseResult').scrollIntoView({behavior:'smooth',block:'start'});}
+    });
+  });
+}
+
+// ═══════════════════════════════════
+// AJOUTER À LA LISTE
+// ═══════════════════════════════════
+function addToList(ids,btnId){
+  const v={name:document.getElementById(ids.name).value.trim(),price:parseFloat(document.getElementById(ids.price).value)||0,city:document.getElementById(ids.city).value.trim(),state:document.getElementById(ids.state).value,platform:document.getElementById(ids.platform).value,url:document.getElementById(ids.url).value.trim()};
   if(!v.name){alert('Nom requis.');return;}
   if(!v.state){alert('Sélectionne l\'état.');return;}
   if(!v.platform){alert('Sélectionne la plateforme.');return;}
@@ -825,68 +932,54 @@ function addToList(nameId,priceId,cityId,stateId,platformId,urlId,btnId){
   const btn=document.getElementById(btnId);
   btn.textContent='✅ Ajouté !';btn.classList.add('success');btn.disabled=true;
   setTimeout(()=>{
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-    document.querySelector('[data-tab="suivi"]').classList.add('active');
-    document.getElementById('tab-suivi').classList.add('active');
+    switchTab('suivi');
     btn.textContent='💾 Ajouter à ma liste';btn.classList.remove('success');btn.disabled=false;
     setTimeout(()=>{const f=document.getElementById('game-list').querySelector('.card');if(f){f.style.borderColor='var(--accent)';setTimeout(()=>f.style.borderColor='',2500);}},100);
   },1200);
 }
-document.getElementById('btnDoAdd').addEventListener('click',()=>addToList('add-name','add-price','add-city','add-state','add-platform','add-url','btnDoAdd'));
-document.getElementById('naBtnDoAdd').addEventListener('click',()=>addToList('na-add-name','na-add-price','na-add-city','na-add-state','na-add-platform','na-add-url','naBtnDoAdd'));
+
+document.getElementById('btnDoAdd').addEventListener('click',()=>addToList({name:'add-name',price:'add-price',city:'add-city',state:'add-state',platform:'add-platform',url:'add-url'},'btnDoAdd'));
+document.getElementById('naBtnDoAdd').addEventListener('click',()=>addToList({name:'na-add-name',price:'na-add-price',city:'na-add-city',state:'na-add-state',platform:'na-add-platform',url:'na-add-url'},'naBtnDoAdd'));
 
 // ═══════════════════════════════════
-// ONGLET SANS API — GÉNÉRATION PROMPT
+// ONGLET SANS API — PROMPT
 // ═══════════════════════════════════
-const SHIPPING_LBL={mondial_relay:'Mondial Relay (choix de l\'acheteur)',colissimo:'Colissimo',main_propre:'Main propre uniquement',non_precise:'Non précisé'};
-
 function buildPrompt(){
+  const name=document.getElementById('na-name').value.trim();
+  const price=document.getElementById('na-price').value.trim();
+  const state=document.getElementById('na-state').value;
+  const platform=document.getElementById('na-platform').value;
+  const edition=document.getElementById('na-edition').value;
   const url=document.getElementById('na-url').value.trim();
   const notes=document.getElementById('na-notes').value.trim();
-  const lines=[
-    'Analyse cette annonce de jeu de société d\'occasion :','',
-    ...(url?['🔗 Lien : '+url]:[]),
-    '',
-    'Visite ce lien et extrait : nom du jeu, prix demandé, état, plateforme.',
-    'Recherche ensuite les prix actuels sur Vinted, Leboncoin, Okkazeo, Philibert, Amazon FR.',
-    'Livraison : Mondial Relay (tarifs : <500g=3,49€ / <1kg=4,29€ / <2kg=4,79€ / <5kg=5,49€ / <10kg=6,49€).',
-    'Règle d\'or : ne jamais payer plus de 65% du prix de revente occasion estimé (frais MR déduits).',
-    ...(notes?['','Infos supplémentaires : '+notes]:[]),
-    '',
-    'Format de réponse :',
-    '🎲 Jeu identifié : [nom exact]',
-    '💶 Prix demandé : [prix extrait]',
-    '📦 État : [état extrait]',
-    '🏷️ Prix neuf constaté : [prix + source]',
-    '♻️ Prix occasion moyen : [fourchette]',
-    '🚚 Frais Mondial Relay : [tarif + poids estimé]',
-    '💰 Prix max à payer (frais MR déduits) : [65% du prix occasion - frais MR]',
-    '📈 Marge estimée si revente : [calcul]',
-    '🔄 Facilité de revente : Facile / Moyenne / Difficile',
-    '🏆 VERDICT : ACHÈTE / NÉGOCIE / PASSE',
-    '💬 Conseil : [argument de négociation si NÉGOCIE]',
-    '⚠️ Points d\'attention : [éléments à vérifier]',
-  ];
+  const stLbl={'NF':'Neuf/jamais joué','TB':'Très bon état','B':'Bon état','M':'Moyen état'}[state]||'non précisé';
+  const lines=['Analyse cette annonce de jeu de société d\'occasion :',''];
+  if(url)lines.push('🔗 Lien : '+url);
+  if(name)lines.push('🎲 Jeu : '+name);
+  if(price)lines.push('💶 Prix demandé : '+price+'€');
+  lines.push('📦 État : '+stLbl);
+  if(edition)lines.push('🌍 Édition : '+edition);
+  if(platform)lines.push('🛒 Plateforme : '+platform);
+  if(notes)lines.push('📝 Remarques : '+notes);
+  lines.push('','--- RÈGLES ---','Recherche les prix réels actuels (Vinted, Leboncoin, Okkazeo, Philibert, Amazon FR).','Règle : ne pas payer plus de 65% du prix de revente occasion.','Mondial Relay (frais à déduire) : <500g=3,49€ <1kg=4,29€ <2kg=4,79€ <5kg=5,49€ <10kg=6,49€.','','Format de réponse :','🎲 Jeu identifié : [nom exact]','💶 Prix demandé : [prix]','🏷️ Prix neuf : [prix + source]','♻️ Prix occasion moyen : [fourchette]','🚚 Frais Mondial Relay : [tarif + poids estimé]','💰 Prix max à payer (MR déduits) : [65% occasion - MR]','📈 Marge estimée : [calcul]','🔄 Facilité de revente : Facile / Moyenne / Difficile','🏆 VERDICT : ACHÈTE / NÉGOCIE / PASSE','💬 Conseil négociation : [si NÉGOCIE]','⚠️ Points d\'attention : [état, pièces, édition…]');
   return lines.join('\n');
 }
 
 function updatePrompt(){
+  const name=document.getElementById('na-name').value.trim();
   const url=document.getElementById('na-url').value.trim();
-  if(!url){
-    document.getElementById('promptWrap').style.display='none';
-    document.getElementById('naAddBlock').style.display='none';
-    return;
-  }
+  if(!name&&!url){document.getElementById('promptWrap').style.display='none';document.getElementById('naAddBlock').style.display='none';return;}
   document.getElementById('promptBox').textContent=buildPrompt();
   document.getElementById('promptWrap').style.display='block';
-  // Pré-remplir le bloc ajout avec ce qu'on sait déjà
+  document.getElementById('na-add-name').value=name;
+  document.getElementById('na-add-price').value=document.getElementById('na-price').value;
+  document.getElementById('na-add-state').value=({'NF':'TB','TB':'TB','B':'B','M':'M'})[document.getElementById('na-state').value]||'';
+  document.getElementById('na-add-platform').value=document.getElementById('na-platform').value;
   document.getElementById('na-add-url').value=url;
-  document.getElementById('na-add-platform').value=detectPlatform(url)||'';
   document.getElementById('naAddBlock').style.display='block';
 }
 
-['na-url','na-notes'].forEach(id=>{
+['na-name','na-price','na-state','na-platform','na-edition','na-url','na-notes'].forEach(id=>{
   const el=document.getElementById(id);
   if(el){el.addEventListener('input',updatePrompt);el.addEventListener('change',updatePrompt);}
 });
@@ -895,86 +988,8 @@ document.getElementById('btnCopy').addEventListener('click',function(){
   const txt=document.getElementById('promptBox').textContent;
   navigator.clipboard.writeText(txt).catch(()=>{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});
   this.textContent='✅ Copié !';this.classList.add('ok');
-  setTimeout(()=>{this.textContent='📋 Copier le message';this.classList.remove('ok');},2500);
+  setTimeout(()=>{this.textContent='📋 Copier';this.classList.remove('ok');},2500);
 });
-
-// ═══════════════════════════════════
-// PIN LOCK
-// ═══════════════════════════════════
-const PIN_KEY = 'chasse-jeux-pin';
-let pinBuffer = '', pinMode = 'verify', pinTemp = '', pinCallback = null;
-
-const getPin    = () => localStorage.getItem(PIN_KEY) || '';
-const hashPin   = p => { let h=0; for(let i=0;i<p.length;i++) h=(Math.imul(31,h)+p.charCodeAt(i))|0; return h.toString(36); };
-const pinUnlocked = () => sessionStorage.getItem('pin-ok') === '1';
-const pinUnlock   = () => sessionStorage.setItem('pin-ok','1');
-
-function requirePin(cb) {
-  if (!getPin()) { showPinSetup(cb); return; }
-  if (pinUnlocked()) { cb(); return; }
-  pinCallback = cb; pinMode = 'verify'; pinBuffer = '';
-  document.getElementById('pinTitle').textContent = 'Zone protégée';
-  document.getElementById('pinSub').textContent = 'Entre ton PIN pour accéder à l\'analyse IA';
-  document.getElementById('pinError').textContent = '';
-  document.getElementById('pinFooter').innerHTML = `<span class="pin-setup-link" onclick="showPinSetup(null)">Changer le PIN</span>`;
-  updatePinDots();
-  document.getElementById('pinOverlay').classList.add('show');
-}
-
-function showPinSetup(cb) {
-  pinCallback = cb; pinMode = 'setup'; pinBuffer = ''; pinTemp = '';
-  document.getElementById('pinTitle').textContent = getPin() ? 'Changer le PIN' : 'Créer un PIN';
-  document.getElementById('pinSub').textContent = 'Choisis un code à 4 chiffres';
-  document.getElementById('pinError').textContent = '';
-  document.getElementById('pinFooter').innerHTML = `<span class="pin-setup-link" onclick="closePinOverlay()">Annuler</span>`;
-  updatePinDots();
-  document.getElementById('pinOverlay').classList.add('show');
-}
-
-function closePinOverlay() { document.getElementById('pinOverlay').classList.remove('show'); pinBuffer = ''; }
-
-function updatePinDots() {
-  for(let i=0;i<4;i++) document.getElementById('pd'+i).classList.toggle('filled', i < pinBuffer.length);
-}
-
-function pinPress(d) {
-  if(pinBuffer.length >= 4) return;
-  pinBuffer += d; updatePinDots();
-  document.getElementById('pinError').textContent = '';
-  if(pinBuffer.length === 4) setTimeout(pinSubmit, 130);
-}
-
-function pinDel() { pinBuffer = pinBuffer.slice(0,-1); updatePinDots(); }
-
-function pinSubmit() {
-  if(pinMode === 'verify') {
-    if(hashPin(pinBuffer) === getPin()) {
-      pinUnlock(); closePinOverlay(); if(pinCallback) pinCallback();
-    } else {
-      document.getElementById('pinError').textContent = '❌ PIN incorrect, réessaie.';
-      pinBuffer = ''; updatePinDots();
-    }
-  } else if(pinMode === 'setup') {
-    pinTemp = pinBuffer; pinBuffer = ''; pinMode = 'confirm';
-    document.getElementById('pinTitle').textContent = 'Confirme le PIN';
-    document.getElementById('pinSub').textContent = 'Retape le même code pour confirmer';
-    document.getElementById('pinError').textContent = '';
-    updatePinDots();
-  } else if(pinMode === 'confirm') {
-    if(pinBuffer === pinTemp) {
-      localStorage.setItem(PIN_KEY, hashPin(pinBuffer));
-      pinUnlock(); closePinOverlay();
-      if(pinCallback) pinCallback();
-      else { alert('✅ PIN enregistré !'); }
-    } else {
-      document.getElementById('pinError').textContent = '❌ Codes différents, recommence.';
-      pinBuffer = ''; pinTemp = ''; pinMode = 'setup';
-      document.getElementById('pinTitle').textContent = getPin() ? 'Changer le PIN' : 'Créer un PIN';
-      document.getElementById('pinSub').textContent = 'Choisis un code à 4 chiffres';
-      updatePinDots();
-    }
-  }
-}
 
 // ═══════════════════════════════════
 // EVENTS GLOBAUX
@@ -993,41 +1008,18 @@ document.querySelectorAll('.filter-btn').forEach(btn=>btn.addEventListener('clic
   this.classList.add('active');currentFilter=this.dataset.filter;render();
 }));
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){ closeModal(); closePinOverlay(); }
-  // Raccourci clavier pour le PIN overlay
+  if(e.key==='Escape'){closeModal();closePinOverlay();}
   if(document.getElementById('pinOverlay').classList.contains('show')){
-    if(e.key>='0'&&e.key<='9') pinPress(e.key);
-    if(e.key==='Backspace') pinDel();
-    if(e.key==='Enter'&&pinBuffer.length===4) pinSubmit();
+    if(e.key>='0'&&e.key<='9')pinPress(e.key);
+    if(e.key==='Backspace')pinDel();
   }
 });
 
-// Intercepter les onglets Analyse
-document.querySelectorAll('.tab-btn').forEach(btn=>{
-  if(btn.dataset.tab==='api'||btn.dataset.tab==='noapi'){
-    btn.addEventListener('click',function(e){
-      e.stopImmediatePropagation();
-      const self=this;
-      requirePin(()=>{
-        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-        document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-        self.classList.add('active');
-        document.getElementById('tab-'+self.dataset.tab).classList.add('active');
-      });
-    },true);
-  }
-});
-
-// Bouton changer PIN dans le panneau clé API
-document.getElementById('apiBody').insertAdjacentHTML('beforeend',`
-  <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
-    <button class="btn-key-del" style="width:100%;text-align:center;padding:8px" onclick="showPinSetup(null)">
-      🔐 Changer / créer le PIN de protection
-    </button>
-  </div>`);
-
+// ═══════════════════════════════════
 // INIT
+// ═══════════════════════════════════
 initKeyUI();
+renderHist();
 render();
 </script>
 </body>

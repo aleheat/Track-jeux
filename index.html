@@ -365,7 +365,7 @@
           2. Clique sur <strong>API Keys</strong> → <strong>Create Key</strong><br>
           3. Copie la clé <strong>sk-ant-…</strong> (affichée une seule fois !)<br>
           4. Colle-la ci-dessous et sauvegarde<br><br>
-          💶 ~0,02€ par analyse. Crédit gratuit offert à l'inscription.<br>
+          💶 Moins de 0,01€ par analyse (modèle Haiku, sans recherche web).<br>
           ⚠️ <strong>Important :</strong> l'appli doit être ouverte depuis <strong>http://localhost</strong> ou un vrai site web — pas depuis un fichier local (file://). Si tu l'ouvres depuis ton bureau, utilise l'onglet "Sans clé API" à la place.
         </div>
         <div class="form-group">
@@ -651,20 +651,18 @@ function prefillAnalyse(id){
 // ═══════════════════════════════════
 // ANALYSE AVEC API
 // ═══════════════════════════════════
-const SYSTEM=`Tu es un expert en jeux de societe d'occasion, specialise dans la rentabilite achats/reventes sur le marche francais (Vinted, Leboncoin, Okkazeo, Philibert, Amazon FR).
+const SYSTEM=`Tu es un expert en jeux de societe d'occasion sur le marche francais. Tu connais tres bien les prix habituels sur Vinted, Leboncoin, Okkazeo, Philibert, Amazon FR et les boutiques specialisees.
 
-MISSION : A partir du lien fourni, tu dois :
-1. Visiter le lien et extraire : nom exact du jeu, prix demande, etat, plateforme.
-2. Rechercher les prix actuels sur le marche francais (Vinted, Leboncoin, Okkazeo, boutiques).
-3. Calculer la rentabilite selon les regles ci-dessous.
+MISSION : A partir du lien fourni, identifies le jeu, estimes les prix du marche depuis ta connaissance, et calcules la rentabilite.
 
 REGLES :
 - Ne jamais payer plus de 65% du prix de revente occasion estime.
-- Mondial Relay = livraison par defaut de l'acheteur. Tarifs : moins de 500g=3.49EUR / moins de 1kg=4.29EUR / moins de 2kg=4.79EUR / moins de 5kg=5.49EUR / moins de 10kg=6.49EUR.
+- Mondial Relay = livraison par defaut. Tarifs : moins de 500g=3.49EUR / moins de 1kg=4.29EUR / moins de 2kg=4.79EUR / moins de 5kg=5.49EUR / moins de 10kg=6.49EUR.
 - VERDICT : ACHETE si prix demande+frais MR inferieur ou egal a 65% du prix occasion / NEGOCIE si legerement au-dessus / PASSE si trop cher.
+- Si le jeu t'est inconnu ou tres recent, indique-le dans "attention" et sois prudent dans l'estimation.
 
 Reponds UNIQUEMENT avec un JSON valide sans aucun texte avant ou apres :
-{"jeu":"nom exact du jeu identifie","prix_demande":"XX EUR (extrait de l'annonce)","etat_annonce":"etat extrait de l'annonce","plateforme":"plateforme detectee","prix_neuf":"XX EUR","prix_occasion_moyen":"XX-XX EUR","frais_mr":"X.XX EUR poids ~Xkg","prix_max_sans_mr":"XX EUR","prix_max_avec_mr":"XX EUR","marge":"XX EUR","revente":"Facile ou Moyenne ou Difficile","raison_revente":"courte explication","verdict":"ACHETE ou NEGOCIE ou PASSE","justification":"1-2 phrases","conseil":"conseil si NEGOCIE sinon vide","attention":"points a verifier"}`;
+{"jeu":"nom exact du jeu identifie","prix_demande":"XX EUR (extrait ou estime depuis le lien)","etat_annonce":"etat extrait de l'annonce","plateforme":"plateforme detectee","prix_neuf":"XX EUR","prix_occasion_moyen":"XX-XX EUR","frais_mr":"X.XX EUR poids ~Xkg","prix_max_sans_mr":"XX EUR","prix_max_avec_mr":"XX EUR","marge":"XX EUR","revente":"Facile ou Moyenne ou Difficile","raison_revente":"courte explication","verdict":"ACHETE ou NEGOCIE ou PASSE","justification":"1-2 phrases","conseil":"conseil si NEGOCIE sinon vide","attention":"points a verifier ou limites de l'estimation"}`;
 
 document.getElementById('btnAnalyse').addEventListener('click', runAnalyse);
 
@@ -692,7 +690,7 @@ async function runAnalyse(){
   const msg=parts.join('\n');
 
   const res=document.getElementById('analyseResult');
-  res.innerHTML=`<div class="loading-pulse"><div class="pulse-dot"></div><div class="pulse-dot"></div><div class="pulse-dot"></div><span>Analyse de l'annonce en cours…</span></div>`;
+  res.innerHTML=`<div class="loading-pulse"><div class="pulse-dot"></div><div class="pulse-dot"></div><div class="pulse-dot"></div><span>Analyse en cours…</span></div>`;
   document.getElementById('addBlock').style.display='none';
   const btn=document.getElementById('btnAnalyse');
   btn.disabled=true;btn.textContent='⏳ En cours…';
@@ -701,7 +699,7 @@ async function runAnalyse(){
     const resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:2000,system:SYSTEM,tools:[{type:'web_search_20250305',name:'web_search'}],messages:[{role:'user',content:msg}]})
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1500,system:SYSTEM,messages:[{role:'user',content:msg}]})
     });
     const data=await resp.json();
     if(!resp.ok)throw new Error(data?.error?.message||'Erreur API '+resp.status);

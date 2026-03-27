@@ -382,16 +382,51 @@
 
     <!-- Formulaire -->
     <div class="analyse-block">
-      <h3>📦 Colle le lien — l'IA fait le reste</h3>
+      <h3>📋 Remplis les infos de l'annonce</h3>
+
       <div class="form-group">
-        <label>🔗 Lien de l'annonce *</label>
-        <input type="url" id="a-url" placeholder="https://www.vinted.fr/items/… ou leboncoin.fr/… ou okkazeo.com/…">
-        <div id="detectedTag" style="margin-top:7px"></div>
+        <label>🎲 Nom du jeu *</label>
+        <input type="text" id="a-name" placeholder="ex: Wingspan, Terraforming Mars, Final Girl…">
       </div>
-      <div class="form-group" style="margin-top:4px">
-        <label style="color:var(--muted)">📝 Infos supplémentaires <span style="font-size:.65rem;opacity:.7">(optionnel)</span></label>
-        <textarea id="a-notes" placeholder="ex: manque des pièces, édition anglaise, lot de 3 jeux…" style="min-height:55px"></textarea>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>💶 Prix demandé (€) *</label>
+          <input type="number" id="a-price" placeholder="0" min="0" step="0.5">
+        </div>
+        <div class="form-group">
+          <label>📦 État *</label>
+          <select id="a-state">
+            <option value="">— Choisir —</option>
+            <option value="NF">Neuf / jamais joué</option>
+            <option value="TB">TB — Très bon état</option>
+            <option value="B">B — Bon état</option>
+            <option value="M">M — Moyen état</option>
+          </select>
+        </div>
       </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>🛒 Plateforme</label>
+          <select id="a-platform">
+            <option value="">— Choisir —</option>
+            <option value="Leboncoin">Leboncoin</option>
+            <option value="Vinted">Vinted</option>
+            <option value="Okkazeo">Okkazeo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>🔗 Lien annonce</label>
+          <input type="url" id="a-url" placeholder="https://…">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label style="color:var(--muted)">📝 Remarques <span style="font-size:.65rem;opacity:.7">(optionnel — ex: manque pièces, édition anglaise…)</span></label>
+        <textarea id="a-notes" placeholder="ex: boîte abîmée, extension incluse, cartes sleevées…" style="min-height:55px"></textarea>
+      </div>
+
       <button class="btn-analyse" id="btnAnalyse">🔍 Analyser la rentabilité</button>
     </div>
 
@@ -634,9 +669,13 @@ document.getElementById('na-url').addEventListener('change',updatePrompt);
 // PREFILL DEPUIS CARTE
 // ═══════════════════════════════════
 function prefillAnalyse(id){
-  const g=games.find(g=>g.id===id);if(!g)return;
-  document.getElementById('a-url').value=g.url||'';
-  document.getElementById('na-url').value=g.url||'';
+  const g=games.find(g=>g.id===id); if(!g) return;
+  document.getElementById('a-name').value     = g.name||'';
+  document.getElementById('a-price').value    = g.price||'';
+  document.getElementById('a-state').value    = g.state||'';
+  document.getElementById('a-platform').value = g.platform||'';
+  document.getElementById('a-url').value      = g.url||'';
+  document.getElementById('na-url').value     = g.url||'';
   const tabTarget=getKey()?'api':'noapi';
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
@@ -645,13 +684,17 @@ function prefillAnalyse(id){
   document.getElementById('analyseResult').innerHTML='';
   document.getElementById('addBlock').style.display='none';
   updatePrompt();
-  setTimeout(()=>document.getElementById('a-url').scrollIntoView({behavior:'smooth',block:'center'}),100);
+  setTimeout(()=>document.getElementById('a-name').scrollIntoView({behavior:'smooth',block:'center'}),100);
 }
 
 // ═══════════════════════════════════
 // ANALYSE AVEC API
 // ═══════════════════════════════════
-const SYSTEM=`Expert jeux occasion france. Depuis le lien: identifie jeu+prix+etat+plateforme. Estime prix marche depuis ta connaissance. Regle: max 65% prix occasion apres deduction frais Mondial Relay (MR: <500g=3.49 <1kg=4.29 <2kg=4.79 <5kg=5.49 <10kg=6.49 EUR). VERDICT: ACHETE(<=65%) NEGOCIE(proche) PASSE(trop cher). JSON uniquement sans texte: {"jeu":"","prix_demande":"","etat_annonce":"","plateforme":"","prix_neuf":"","prix_occasion_moyen":"","frais_mr":"","prix_max_avec_mr":"","marge":"","revente":"Facile/Moyenne/Difficile","verdict":"ACHETE/NEGOCIE/PASSE","justification":"","conseil":"","attention":""}`;
+const SYSTEM=`Tu es un expert en jeux de societe d'occasion sur le marche francais. Tu connais les prix habituels sur Vinted, Leboncoin, Okkazeo, Philibert, Amazon FR.
+Regles: ne pas payer plus de 65% du prix revente occasion. Frais Mondial Relay selon poids estime: <500g=3.49 <1kg=4.29 <2kg=4.79 <5kg=5.49 <10kg=6.49 EUR.
+VERDICT: ACHETE si prix+MR <= 65% prix occasion. NEGOCIE si legerement au-dessus. PASSE si trop cher.
+Reponds UNIQUEMENT avec JSON valide, sans texte avant ou apres:
+{"prix_neuf":"","prix_occasion_moyen":"","frais_mr":"","prix_max_avec_mr":"","marge":"","revente":"Facile/Moyenne/Difficile","raison_revente":"","verdict":"ACHETE/NEGOCIE/PASSE","justification":"","conseil":"","attention":""}`;
 
 document.getElementById('btnAnalyse').addEventListener('click', runAnalyse);
 
@@ -663,73 +706,78 @@ async function runAnalyse(){
     alert('Configure d\'abord ta clé API en haut de cette page.\nSi tu n\'en as pas, utilise l\'onglet "Sans clé API".');
     return;
   }
-  const url=document.getElementById('a-url').value.trim();
-  const notes=document.getElementById('a-notes').value.trim();
-  if(!url){alert('Colle le lien de l\'annonce.');return;}
+  const name    = document.getElementById('a-name').value.trim();
+  const price   = parseFloat(document.getElementById('a-price').value)||0;
+  const state   = document.getElementById('a-state').value;
+  const platform= document.getElementById('a-platform').value;
+  const url     = document.getElementById('a-url').value.trim();
+  const notes   = document.getElementById('a-notes').value.trim();
 
-  const parts = ['Lien: '+url];
-  if(notes) parts.push('Infos: '+notes);
-  parts.push('Analyse et retourne le JSON.');
-  const msg = parts.join('\n');
+  if(!name) { alert('Entre le nom du jeu.'); return; }
+  if(!price){ alert('Entre le prix demandé.'); return; }
+  if(!state){ alert('Sélectionne l\'état.'); return; }
+
+  const stateLabel = {'NF':'Neuf / jamais joué','TB':'Très bon état','B':'Bon état','M':'Moyen état'}[state]||state;
+
+  const msg = `Jeu: ${name}
+Prix demande: ${price}EUR
+Etat: ${stateLabel}${platform?'\nPlateforme: '+platform:''}${notes?'\nRemarques: '+notes:''}
+Donne ton analyse JSON de rentabilite pour ce jeu d'occasion.`;
 
   const res=document.getElementById('analyseResult');
   res.innerHTML=`<div class="loading-pulse"><div class="pulse-dot"></div><div class="pulse-dot"></div><div class="pulse-dot"></div><span>Analyse en cours…</span></div>`;
   document.getElementById('addBlock').style.display='none';
   const btn=document.getElementById('btnAnalyse');
-  btn.disabled=true;btn.textContent='⏳ En cours…';
+  btn.disabled=true; btn.textContent='⏳ En cours…';
 
   try{
     const resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:500,system:SYSTEM,messages:[{role:'user',content:msg}]})
+      body:JSON.stringify({model:'claude-3-haiku-20240307',max_tokens:400,system:SYSTEM,messages:[{role:'user',content:msg}]})
     });
     const data=await resp.json();
-    if(!resp.ok)throw new Error(data?.error?.message||'Erreur API '+resp.status);
+    if(!resp.ok) throw new Error(data?.error?.message||'Erreur API '+resp.status);
     const text=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
-    if(!text)throw new Error('Aucune réponse. Clé API invalide ou épuisée ?');
+    if(!text) throw new Error('Aucune réponse reçue.');
     const match=text.match(/\{[\s\S]*\}/);
-    if(!match)throw new Error('Format inattendu. Réessaie.');
+    if(!match) throw new Error('Format inattendu. Réessaie.');
     const r=JSON.parse(match[0]);
-    if(r.verdict==='ACHETE')r.verdict='ACHÈTE';
-    if(r.verdict==='NEGOCIE')r.verdict='NÉGOCIE';
-    // Détecter la plateforme depuis l'URL si pas dans le JSON
-    if(!r.plateforme)r.plateforme=detectPlatform(url);
-    showResult(r, url);
+    if(r.verdict==='ACHETE')  r.verdict='ACHÈTE';
+    if(r.verdict==='NEGOCIE') r.verdict='NÉGOCIE';
+    showResult(r, name, price, state, platform, url);
   }catch(err){
     console.error(err);
     let hint='';
-    if(err.message.includes('401')||err.message.includes('auth'))hint='<br><br>💡 Clé invalide. Supprime-la et entre-la à nouveau.';
-    else if(err.message.includes('fetch')||err.message.includes('Failed'))hint='<br><br>💡 Erreur réseau. Si tu ouvres ce fichier depuis ton bureau (file://), utilise l\'onglet <strong>Sans clé API</strong> à la place.';
-    else if(err.message.includes('429'))hint='<br><br>💡 Trop de requêtes. Attends quelques secondes.';
+    if(err.message.includes('401')||err.message.includes('auth'))  hint='<br><br>💡 Clé invalide — supprime-la et entre-la à nouveau.';
+    else if(err.message.includes('credit')||err.message.includes('balance')) hint='<br><br>💡 Crédits épuisés — recharge sur console.anthropic.com → Plans & Billing.';
+    else if(err.message.includes('429')) hint='<br><br>💡 Trop de requêtes, attends quelques secondes.';
     res.innerHTML=`<div class="error-box"><div class="error-title">❌ Erreur</div><div class="error-msg">${esc(err.message)}${hint}</div></div>`;
   }finally{
-    btn.disabled=false;btn.textContent='🔍 Analyser la rentabilité';
+    btn.disabled=false; btn.textContent='🔍 Analyser la rentabilité';
   }
 }
 
-function showResult(r, origUrl){
+function showResult(r, origName, origPrice, origState, origPlatform, origUrl){
   const vCls=({ACHÈTE:'v-achete',NÉGOCIE:'v-negocie',PASSE:'v-passe'})[r.verdict]||'v-negocie';
   const revCls=({Facile:'rev-facile',Moyenne:'rev-moyenne',Difficile:'rev-difficile'})[r.revente]||'rev-moyenne';
-  const demandNum=parseFloat(String(r.prix_demande||'').replace(/[^\d.,]/g,'').replace(',','.'))||0;
   const maxNum=parseFloat(String(r.prix_max_avec_mr||'').replace(/[^\d.,]/g,'').replace(',','.'))||0;
   const margeNum=parseFloat(String(r.marge||'').replace(/[^\d.,-]/g,'').replace(',','.'))||0;
-  const priceCls=demandNum&&maxNum?(demandNum<=maxNum?'g':'r'):'';
+  const priceCls=origPrice&&maxNum?(origPrice<=maxNum?'g':'r'):'';
+  const stateShort={'NF':'NF','TB':'TB','B':'B','M':'M'}[origState]||origState;
+
   document.getElementById('analyseResult').innerHTML=`
 <div class="result-wrap"><div class="result-card">
   <div class="result-header">
-    <div class="result-game">${esc(r.jeu||'Jeu identifié')}</div>
+    <div class="result-game">${esc(origName)}</div>
     <div class="vp ${vCls}">${r.verdict}</div>
   </div>
   <div class="result-grid">
-    <div class="rcell"><div class="rcell-label">Prix demandé</div><div class="rcell-val ${priceCls}">${esc(r.prix_demande)}</div></div>
-    <div class="rcell"><div class="rcell-label">État annoncé</div><div class="rcell-val">${esc(r.etat_annonce||'—')}</div></div>
-    <div class="rcell"><div class="rcell-label">Plateforme</div><div class="rcell-val">${esc(r.plateforme||'—')}</div></div>
+    <div class="rcell"><div class="rcell-label">Prix demandé</div><div class="rcell-val ${priceCls}">${origPrice.toFixed(2)}€</div></div>
     <div class="rcell"><div class="rcell-label">Prix neuf</div><div class="rcell-val">${esc(r.prix_neuf)}</div></div>
     <div class="rcell"><div class="rcell-label">Prix occasion moyen</div><div class="rcell-val">${esc(r.prix_occasion_moyen)}</div></div>
     <div class="rcell"><div class="rcell-label">Frais Mondial Relay</div><div class="rcell-val">${esc(r.frais_mr)}</div></div>
     <div class="rcell"><div class="rcell-label">Prix max à payer</div><div class="rcell-val g">${esc(r.prix_max_avec_mr)}</div></div>
-    <div class="rcell"><div class="rcell-label">Prix demandé vs max</div><div class="rcell-val ${priceCls}">${demandNum?demandNum.toFixed(2)+'€ '+(demandNum<=maxNum?'✓':'✗'):'—'}</div></div>
     <div class="rcell"><div class="rcell-label">Marge si revente</div><div class="rcell-val ${margeNum>5?'g':margeNum>0?'y':'r'}">${esc(r.marge)}</div></div>
   </div>
   <div class="result-body">
@@ -740,15 +788,14 @@ function showResult(r, origUrl){
   </div>
   <div class="result-footer">🚚 <span>Mondial Relay</span> — frais intégrés dans le calcul du prix max.</div>
 </div></div>`;
-  // Pré-remplir le bloc ajout avec les infos extraites par l'IA
-  const stateMap={'tres bon':'TB','très bon':'TB','tb':'TB','bon':'B','moyen':'M','m':'M','b':'B'};
-  const stateKey=Object.keys(stateMap).find(k=>(r.etat_annonce||'').toLowerCase().includes(k))||'';
-  document.getElementById('add-name').value=r.jeu||'';
-  document.getElementById('add-price').value=demandNum||'';
-  document.getElementById('add-state').value=stateMap[stateKey]||'';
-  document.getElementById('add-platform').value=r.plateforme||detectPlatform(origUrl)||'';
-  document.getElementById('add-url').value=origUrl||'';
-  document.getElementById('add-city').value='';
+
+  // Pré-remplir "Ajouter à ma liste"
+  document.getElementById('add-name').value    = origName;
+  document.getElementById('add-price').value   = origPrice;
+  document.getElementById('add-state').value   = stateShort === 'NF' ? 'TB' : stateShort;
+  document.getElementById('add-platform').value= origPlatform||'';
+  document.getElementById('add-url').value     = origUrl||'';
+  document.getElementById('add-city').value    = '';
   document.getElementById('addBlock').style.display='block';
   document.getElementById('analyseResult').scrollIntoView({behavior:'smooth',block:'start'});
 }

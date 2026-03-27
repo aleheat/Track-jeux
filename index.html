@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎲 Chasse aux Jeux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0f0e11;--surface:#1a1820;--surface2:#221f2a;--border:#2e2a38;
+    --accent:#c8f04d;--accent2:#7c5cbf;--text:#f0ecff;--muted:#7a7390;
+    --lbc:#ff6b35;--vinted:#09b1ba;--okk:#e84393;
+    --radius:14px;--tb:#c8f04d;--b:#f0c040;--m:#f06060;
+    --green:#4caf82;--yellow:#f0c040;--red:#f06060;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Mono',monospace;background:var(--bg);color:var(--text);min-height:100vh;padding:0 0 60px;}
+
+  /* HEADER */
+  header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:12px;flex-wrap:wrap;}
+  header h1{font-family:'Syne',sans-serif;font-size:clamp(1rem,4vw,1.4rem);font-weight:800;letter-spacing:-0.03em;color:var(--accent);}
+  header h1 span{color:var(--text);}
+  .header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .toggle-bought{font-family:'DM Mono',monospace;font-size:.72rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:999px;cursor:pointer;transition:all .2s;}
+  .toggle-bought:hover,.toggle-bought.active{border-color:var(--accent2);color:var(--accent);background:rgba(124,92,191,.1);}
+  .btn-add-top{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;background:var(--accent);color:#0f0e11;border:none;padding:8px 16px;border-radius:999px;cursor:pointer;transition:transform .15s,opacity .15s;}
+  .btn-add-top:hover{opacity:.85;transform:scale(1.03);}
+
+  /* TABS */
+  .tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface);padding:0 16px;overflow-x:auto;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab-btn{font-family:'Syne',sans-serif;font-weight:600;font-size:.78rem;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);padding:12px 14px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+  .tab-btn:hover{color:var(--text);}
+  .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+  main{max-width:860px;margin:0 auto;padding:24px 16px 0;}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  /* STATS */
+  .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px;}
+  .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;flex:1;min-width:90px;}
+  .stat-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+  .stat-value{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--accent);}
+
+  /* MODAL */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;padding:16px;}
+  .overlay.open{display:flex;}
+  .modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:26px 22px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;animation:slideUp .25s ease;}
+  @keyframes slideUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+  .modal h2{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;margin-bottom:20px;color:var(--text);}
+  .form-group{margin-bottom:14px;}
+  label{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:5px;}
+  input[type="text"],input[type="number"],input[type="url"],input[type="password"],select,textarea{
+    width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);
+    font-family:'DM Mono',monospace;font-size:.88rem;padding:9px 13px;border-radius:10px;outline:none;transition:border-color .2s;
+  }
+  input:focus,select:focus,textarea:focus{border-color:var(--accent2);}
+  select option{background:var(--surface2);}
+  textarea{resize:vertical;min-height:65px;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .modal-actions{display:flex;gap:10px;margin-top:20px;}
+  .btn-save{flex:1;font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;background:var(--accent);color:#0f0e11;border:none;padding:11px;border-radius:10px;cursor:pointer;}
+  .btn-save:hover{opacity:.85;}
+  .btn-cancel{font-family:'DM Mono',monospace;font-size:.82rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:11px 18px;border-radius:10px;cursor:pointer;}
+
+  /* FILTERS */
+  .filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;align-items:center;}
+  .filter-btn{font-family:'DM Mono',monospace;font-size:.7rem;border:1px solid var(--border);background:transparent;color:var(--muted);padding:4px 12px;border-radius:999px;cursor:pointer;transition:all .15s;}
+  .filter-btn:hover{border-color:var(--accent2);color:var(--text);}
+  .filter-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(200,240,77,.08);}
+  .filter-sep{width:1px;height:18px;background:var(--border);}
+  .sort-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .sort-row label{margin:0;white-space:nowrap;font-size:.65rem;}
+  .sort-row select{width:auto;flex:1;font-size:.78rem;padding:6px 10px;}
+  .list-header{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+  #game-list{display:flex;flex-direction:column;gap:10px;}
+  .empty{text-align:center;color:var(--muted);padding:50px 20px;font-size:.88rem;}
+  .empty span{font-size:2rem;display:block;margin-bottom:10px;}
+
+  /* CARDS */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px 17px;display:grid;grid-template-columns:1fr auto;gap:8px;transition:border-color .2s;animation:fadeIn .2s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .card:hover{border-color:var(--accent2);}
+  .card.bought{opacity:.45;border-style:dashed;}
+  .card-left{min-width:0;}
+  .card-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:6px;}
+  .card-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .badge{font-size:.6rem;padding:2px 7px;border-radius:999px;font-weight:500;white-space:nowrap;}
+  .badge-lbc{background:rgba(255,107,53,.15);color:var(--lbc);border:1px solid rgba(255,107,53,.3);}
+  .badge-vinted{background:rgba(9,177,186,.15);color:var(--vinted);border:1px solid rgba(9,177,186,.3);}
+  .badge-okk{background:rgba(232,67,147,.15);color:var(--okk);border:1px solid rgba(232,67,147,.3);}
+  .badge-tb{background:rgba(200,240,77,.12);color:var(--tb);border:1px solid rgba(200,240,77,.25);}
+  .badge-b{background:rgba(240,192,64,.12);color:var(--b);border:1px solid rgba(240,192,64,.25);}
+  .badge-m{background:rgba(240,96,96,.12);color:var(--m);border:1px solid rgba(240,96,96,.25);}
+  .card-meta{font-size:.73rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:10px;}
+  .card-meta a{color:var(--accent2);text-decoration:none;}
+  .card-meta a:hover{text-decoration:underline;}
+  .card-right{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:8px;}
+  .card-price{font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;color:var(--accent);white-space:nowrap;}
+  .score-pill{font-size:.6rem;background:rgba(200,240,77,.08);border:1px solid rgba(200,240,77,.2);color:var(--accent);padding:2px 8px;border-radius:999px;}
+  .card-actions{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap;}
+  .check-label{display:flex;align-items:center;gap:5px;font-size:.7rem;color:var(--muted);cursor:pointer;}
+  .check-label input{accent-color:var(--accent);width:14px;height:14px;cursor:pointer;}
+  .btn-sm{background:transparent;border:1px solid var(--border);color:var(--muted);font-size:.72rem;padding:3px 9px;border-radius:7px;cursor:pointer;font-family:'DM Mono',monospace;transition:all .15s;}
+  .btn-sm.edit:hover{border-color:var(--accent2);color:var(--accent2);}
+  .btn-sm.del:hover{border-color:var(--m);color:var(--m);}
+  .btn-sm.ana:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* ═══ ANALYSE COMMUN ═══ */
+  .analyse-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:18px;}
+  .analyse-block h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;margin-bottom:14px;color:var(--text);}
+  .url-row{display:flex;gap:8px;}
+  .url-row input{flex:1;}
+  .btn-detect{font-family:'Syne',sans-serif;font-weight:700;font-size:.75rem;background:var(--accent2);color:#fff;border:none;padding:9px 13px;border-radius:10px;cursor:pointer;white-space:nowrap;}
+  .btn-detect:hover{opacity:.8;}
+  .detected-tag{display:inline-block;margin-top:7px;font-size:.7rem;background:rgba(124,92,191,.12);border:1px solid rgba(124,92,191,.3);color:var(--accent2);padding:2px 9px;border-radius:999px;}
+
+  /* ═══ ONGLET AVEC API ═══ */
+  .api-setup{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:18px;}
+  .api-setup-header{padding:13px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:10px;}
+  .api-setup-header:hover{background:var(--surface2);}
+  .api-setup-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;display:flex;align-items:center;gap:8px;}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--m);flex-shrink:0;}
+  .dot.ok{background:var(--green);}
+  .api-setup-body{padding:0 18px 18px;border-top:1px solid var(--border);}
+  .api-setup-body.hidden{display:none;}
+  .api-help-box{background:var(--surface2);border-radius:10px;padding:13px 15px;margin:13px 0;font-size:.76rem;color:var(--muted);line-height:1.7;}
+  .api-help-box strong{color:var(--text);}
+  .api-help-box a{color:var(--accent2);text-decoration:none;}
+  .api-help-box a:hover{text-decoration:underline;}
+  .api-key-row{display:flex;gap:8px;}
+  .api-key-row input{flex:1;}
+  .btn-key-save{font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;background:var(--accent2);color:#fff;border:none;padding:9px 14px;border-radius:10px;cursor:pointer;white-space:nowrap;}
+  .btn-key-save:hover{opacity:.8;}
+  .key-status{font-size:.68rem;margin-top:7px;color:var(--muted);}
+  .key-status.ok{color:var(--green);}
+  .key-status.err{color:var(--red);}
+  .btn-key-del{font-family:'DM Mono',monospace;font-size:.68rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:3px 9px;border-radius:7px;cursor:pointer;margin-top:5px;}
+  .btn-key-del:hover{border-color:var(--red);color:var(--red);}
+
+  .btn-analyse{width:100%;font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;background:var(--accent);color:#0f0e11;border:none;padding:13px;border-radius:10px;cursor:pointer;transition:opacity .15s,transform .15s;margin-top:4px;}
+  .btn-analyse:hover{opacity:.85;transform:scale(1.01);}
+  .btn-analyse:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+
+  /* Loading */
+  .loading-pulse{display:flex;align-items:center;gap:12px;padding:26px 0;color:var(--muted);font-size:.83rem;}
+  .pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 1.2s ease-in-out infinite;}
+  .pulse-dot:nth-child(2){animation-delay:.2s;}
+  .pulse-dot:nth-child(3){animation-delay:.4s;}
+  @keyframes pulse{0%,100%{opacity:.2;transform:scale(.8);}50%{opacity:1;transform:scale(1.1);}}
+
+  /* Résultat IA */
+  .result-wrap{animation:fadeIn .3s ease;margin-bottom:18px;}
+  .result-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+  .result-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  .result-game{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;}
+  .vp{font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;padding:5px 18px;border-radius:999px;}
+  .v-achete{background:rgba(76,175,130,.15);color:var(--green);border:2px solid rgba(76,175,130,.4);}
+  .v-negocie{background:rgba(240,192,64,.12);color:var(--yellow);border:2px solid rgba(240,192,64,.4);}
+  .v-passe{background:rgba(240,96,96,.12);color:var(--red);border:2px solid rgba(240,96,96,.4);}
+  .result-grid{display:grid;grid-template-columns:repeat(3,1fr);}
+  .rcell{padding:11px 16px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
+  .rcell:nth-child(3n){border-right:none;}
+  .rcell:nth-last-child(-n+3){border-bottom:none;}
+  .rcell-label{font-size:.58rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px;}
+  .rcell-val{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--text);}
+  .rcell-val.g{color:var(--green);}
+  .rcell-val.y{color:var(--yellow);}
+  .rcell-val.r{color:var(--red);}
+  .result-body{padding:14px 18px;}
+  .rsec{margin-bottom:11px;}
+  .rsec-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px;}
+  .rsec-text{font-size:.83rem;color:var(--text);line-height:1.55;}
+  .rev-badge{display:inline-block;font-size:.66rem;padding:2px 8px;border-radius:999px;margin-right:5px;}
+  .rev-facile{background:rgba(76,175,130,.1);color:var(--green);border:1px solid rgba(76,175,130,.3);}
+  .rev-moyenne{background:rgba(240,192,64,.1);color:var(--yellow);border:1px solid rgba(240,192,64,.3);}
+  .rev-difficile{background:rgba(240,96,96,.1);color:var(--red);border:1px solid rgba(240,96,96,.3);}
+  .conseil-box{background:rgba(124,92,191,.08);border:1px solid rgba(124,92,191,.25);border-radius:10px;padding:11px 13px;font-size:.81rem;color:var(--text);line-height:1.5;margin-top:4px;}
+  .result-footer{border-top:1px solid var(--border);padding:9px 18px;font-size:.68rem;color:var(--muted);}
+  .result-footer span{color:var(--accent);}
+
+  /* Ajouter à la liste */
+  .add-block{background:var(--surface);border:2px solid rgba(200,240,77,.3);border-radius:var(--radius);padding:18px;margin-bottom:18px;animation:fadeIn .3s ease;}
+  .add-block h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--accent);margin-bottom:3px;}
+  .add-block p{font-size:.75rem;color:var(--muted);margin-bottom:14px;}
+  .add-fields{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px;}
+  .btn-do-add{width:100%;font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;background:var(--accent);color:#0f0e11;border:none;padding:12px;border-radius:10px;cursor:pointer;}
+  .btn-do-add:hover{opacity:.85;}
+  .btn-do-add.success{background:var(--green);color:#fff;}
+
+  .error-box{background:var(--surface);border:1px solid rgba(240,96,96,.35);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;}
+  .error-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:var(--red);margin-bottom:5px;}
+  .error-msg{font-size:.8rem;color:var(--muted);line-height:1.6;}
+
+  /* ═══ ONGLET SANS API ═══ */
+  .howto-box{background:var(--surface);border:1px solid rgba(200,240,77,.2);border-radius:var(--radius);padding:16px 18px;margin-bottom:18px;}
+  .howto-box-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--accent);margin-bottom:12px;}
+  .howto-step{display:flex;gap:10px;margin-bottom:9px;align-items:flex-start;font-size:.78rem;color:var(--muted);line-height:1.55;}
+  .howto-step:last-child{margin-bottom:0;}
+  .howto-num{font-family:'Syne',sans-serif;font-weight:800;font-size:.7rem;background:var(--accent2);color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+  .howto-step strong{color:var(--text);}
+
+  .prompt-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:18px;}
+  .prompt-wrap h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;padding:14px 18px;border-bottom:1px solid var(--border);color:var(--text);}
+  .prompt-box{padding:14px 18px;font-size:.78rem;color:var(--text);line-height:1.65;white-space:pre-wrap;word-break:break-word;background:var(--surface2);max-height:320px;overflow-y:auto;}
+  .prompt-actions{padding:12px 18px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;}
+  .btn-copy{font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;background:var(--accent);color:#0f0e11;border:none;padding:9px 18px;border-radius:8px;cursor:pointer;}
+  .btn-copy:hover{opacity:.85;}
+  .btn-copy.ok{background:var(--green);color:#fff;}
+  .btn-claude{font-family:'DM Mono',monospace;font-size:.75rem;background:transparent;border:1px solid var(--accent2);color:var(--accent2);padding:9px 14px;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;}
+  .btn-claude:hover{background:rgba(124,92,191,.12);}
+
+  @media(max-width:600px){
+    .form-row,.add-fields,.result-grid{grid-template-columns:1fr 1fr;}
+    .tab-btn{padding:12px 10px;font-size:.72rem;}
+    .card-price{font-size:1.1rem;}
+    .url-row{flex-direction:column;}
+  }
+  ::-webkit-scrollbar{width:5px;}
+  ::-webkit-scrollbar-track{background:var(--bg);}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎲 <span>Chasse aux</span> Jeux</h1>
+  <div class="header-actions">
+    <button class="toggle-bought" id="toggleBought">Afficher achetés</button>
+    <button class="btn-add-top" id="openAdd">+ Ajouter</button>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="suivi">📋 Mes annonces</button>
+  <button class="tab-btn" data-tab="api">🤖 Analyse (avec clé API)</button>
+  <button class="tab-btn" data-tab="noapi">💬 Analyse (sans clé API)</button>
+</nav>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2 id="modal-title">Nouvelle annonce</h2>
+    <div class="form-group"><label>Nom du jeu *</label><input type="text" id="f-name" placeholder="ex: Catan, Pandemic…"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Prix (€) *</label><input type="number" id="f-price" placeholder="0" min="0" step="0.5"></div>
+      <div class="form-group"><label>Ville / CP</label><input type="text" id="f-city" placeholder="ex: Lyon 69000"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>État *</label>
+        <select id="f-state"><option value="">— Choisir —</option><option value="TB">TB — Très bon</option><option value="B">B — Bon</option><option value="M">M — Moyen</option></select>
+      </div>
+      <div class="form-group"><label>Plateforme *</label>
+        <select id="f-platform"><option value="">— Choisir —</option><option value="Leboncoin">Leboncoin</option><option value="Vinted">Vinted</option><option value="Okkazeo">Okkazeo</option></select>
+      </div>
+    </div>
+    <div class="form-group"><label>Lien de l'annonce</label><input type="url" id="f-url" placeholder="https://…"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="cancelBtn">Annuler</button>
+      <button class="btn-save" id="saveBtn">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- ═══ MES ANNONCES ═══ -->
+  <div class="tab-panel active" id="tab-suivi">
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Annonces</div><div class="stat-value" id="stat-total">0</div></div>
+      <div class="stat"><div class="stat-label">Achetés</div><div class="stat-value" id="stat-bought">0</div></div>
+      <div class="stat"><div class="stat-label">Prix moyen</div><div class="stat-value" id="stat-avg">—</div></div>
+      <div class="stat"><div class="stat-label">Meilleur score</div><div class="stat-value" id="stat-best">—</div></div>
+    </div>
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">Tous</button>
+      <div class="filter-sep"></div>
+      <button class="filter-btn" data-filter="Leboncoin">LBC</button>
+      <button class="filter-btn" data-filter="Vinted">Vinted</button>
+      <button class="filter-btn" data-filter="Okkazeo">Okkazeo</button>
+      <div class="filter-sep"></div>
+      <button class="filter-btn" data-filter="TB">TB</button>
+      <button class="filter-btn" data-filter="B">B</button>
+      <button class="filter-btn" data-filter="M">M</button>
+    </div>
+    <div class="sort-row">
+      <label>Trier par</label>
+      <select id="sortSelect">
+        <option value="score">Score (meilleur d'abord)</option>
+        <option value="price_asc">Prix croissant</option>
+        <option value="price_desc">Prix décroissant</option>
+        <option value="name">Nom A→Z</option>
+        <option value="date">Date d'ajout</option>
+      </select>
+    </div>
+    <div class="list-header" id="listCount"></div>
+    <div id="game-list"></div>
+  </div>
+
+  <!-- ═══ ANALYSE AVEC API ═══ -->
+  <div class="tab-panel" id="tab-api">
+
+    <!-- Clé API -->
+    <div class="api-setup">
+      <div class="api-setup-header" id="apiToggle">
+        <div class="api-setup-title"><div class="dot" id="apiDot"></div>🔑 Clé API Anthropic</div>
+        <span id="apiToggleIcon" style="color:var(--muted);font-size:.78rem;">▼ Configurer</span>
+      </div>
+      <div class="api-setup-body hidden" id="apiBody">
+        <div class="api-help-box">
+          <strong>Comment obtenir ta clé (gratuit pour démarrer) :</strong><br><br>
+          1. Va sur <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → crée un compte<br>
+          2. Clique sur <strong>API Keys</strong> → <strong>Create Key</strong><br>
+          3. Copie la clé <strong>sk-ant-…</strong> (affichée une seule fois !)<br>
+          4. Colle-la ci-dessous et sauvegarde<br><br>
+          💶 ~0,02€ par analyse. Crédit gratuit offert à l'inscription.<br>
+          ⚠️ <strong>Important :</strong> l'appli doit être ouverte depuis <strong>http://localhost</strong> ou un vrai site web — pas depuis un fichier local (file://). Si tu l'ouvres depuis ton bureau, utilise l'onglet "Sans clé API" à la place.
+        </div>
+        <div class="form-group">
+          <label>Ta clé API</label>
+          <div class="api-key-row">
+            <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-…">
+            <button class="btn-key-save" id="btnKeySave">Sauvegarder</button>
+          </div>
+          <div class="key-status" id="keyStatus">Non configurée.</div>
+          <button class="btn-key-del" id="btnKeyDel" style="display:none">🗑 Supprimer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulaire -->
+    <div class="analyse-block">
+      <h3>📦 Annonce à analyser</h3>
+      <div class="form-group">
+        <label>🔗 Lien de l'annonce</label>
+        <div class="url-row">
+          <input type="url" id="a-url" placeholder="https://www.vinted.fr/items/… ou leboncoin.fr/…">
+          <button class="btn-detect" id="btnDetect">Détecter</button>
+        </div>
+        <div id="detectedTag"></div>
+      </div>
+      <div class="form-group"><label>Nom du jeu *</label><input type="text" id="a-name" placeholder="ex: Final Girl, Wingspan…"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Prix demandé (€) *</label><input type="number" id="a-price" placeholder="0" min="0" step="0.5"></div>
+        <div class="form-group"><label>État</label>
+          <select id="a-state"><option value="">— Non précisé —</option><option value="TB">TB — Très bon</option><option value="B">B — Bon</option><option value="M">M — Moyen</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Plateforme</label>
+          <select id="a-platform"><option value="">— Choisir —</option><option value="Leboncoin">Leboncoin</option><option value="Vinted">Vinted</option><option value="Okkazeo">Okkazeo</option></select>
+        </div>
+        <div class="form-group"><label>Livraison</label>
+          <select id="a-shipping"><option value="mondial_relay">Mondial Relay (mon choix)</option><option value="colissimo">Colissimo</option><option value="main_propre">Main propre</option><option value="non_precise">Non précisé</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Infos supplémentaires</label>
+        <textarea id="a-notes" placeholder="ex: édition française, avec extension, il manque 2 billets…"></textarea>
+      </div>
+      <button class="btn-analyse" id="btnAnalyse">🔍 Analyser la rentabilité</button>
+    </div>
+
+    <div id="analyseResult"></div>
+
+    <div id="addBlock" style="display:none" class="add-block">
+      <h3>✅ Ajouter à ma liste</h3>
+      <p>Tout est pré-rempli. Corrige si besoin puis sauvegarde.</p>
+      <div class="add-fields">
+        <div class="form-group"><label>Nom *</label><input type="text" id="add-name"></div>
+        <div class="form-group"><label>Prix (€) *</label><input type="number" id="add-price" min="0" step="0.5"></div>
+        <div class="form-group"><label>Ville / CP</label><input type="text" id="add-city" placeholder="ex: Marseille"></div>
+        <div class="form-group"><label>État *</label>
+          <select id="add-state"><option value="">—</option><option value="TB">TB</option><option value="B">B</option><option value="M">M</option></select>
+        </div>
+        <div class="form-group"><label>Plateforme *</label>
+          <select id="add-platform"><option value="">—</option><option value="Leboncoin">Leboncoin</option><option value="Vinted">Vinted</option><option value="Okkazeo">Okkazeo</option></select>
+        </div>
+        <div class="form-group"><label>Lien</label><input type="url" id="add-url"></div>
+      </div>
+      <button class="btn-do-add" id="btnDoAdd">💾 Ajouter à ma liste</button>
+    </div>
+  </div>
+
+  <!-- ═══ ANALYSE SANS API ═══ -->
+  <div class="tab-panel" id="tab-noapi">
+
+    <div class="howto-box">
+      <div class="howto-box-title">💡 Comment ça marche sans clé API ?</div>
+      <div class="howto-step"><div class="howto-num">1</div><div>Remplis les infos de l'annonce ci-dessous — le message pour Claude est généré automatiquement.</div></div>
+      <div class="howto-step"><div class="howto-num">2</div><div>Clique <strong>Copier le message</strong> puis colle-le ici dans <strong>Claude.ai</strong> — Claude cherche les prix et donne son verdict.</div></div>
+      <div class="howto-step"><div class="howto-num">3</div><div>Si le score est bon, reviens ici et clique <strong>Ajouter à ma liste</strong> — tout est pré-rempli automatiquement.</div></div>
+    </div>
+
+    <!-- Formulaire sans API -->
+    <div class="analyse-block">
+      <h3>📦 Annonce à analyser</h3>
+      <div class="form-group">
+        <label>🔗 Lien de l'annonce</label>
+        <div class="url-row">
+          <input type="url" id="na-url" placeholder="https://www.vinted.fr/items/… ou leboncoin.fr/…">
+          <button class="btn-detect" id="naBtnDetect">Détecter</button>
+        </div>
+        <div id="naDetectedTag"></div>
+      </div>
+      <div class="form-group"><label>Nom du jeu *</label><input type="text" id="na-name" placeholder="ex: Final Girl, Wingspan…"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Prix demandé (€)</label><input type="number" id="na-price" placeholder="0" min="0" step="0.5"></div>
+        <div class="form-group"><label>État</label>
+          <select id="na-state"><option value="">— Non précisé —</option><option value="TB">TB — Très bon</option><option value="B">B — Bon</option><option value="M">M — Moyen</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Plateforme</label>
+          <select id="na-platform"><option value="">— Choisir —</option><option value="Leboncoin">Leboncoin</option><option value="Vinted">Vinted</option><option value="Okkazeo">Okkazeo</option></select>
+        </div>
+        <div class="form-group"><label>Livraison</label>
+          <select id="na-shipping"><option value="mondial_relay">Mondial Relay (mon choix)</option><option value="colissimo">Colissimo</option><option value="main_propre">Main propre</option><option value="non_precise">Non précisé</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Infos supplémentaires</label>
+        <textarea id="na-notes" placeholder="ex: édition française, avec extension, il manque 2 billets…"></textarea>
+      </div>
+    </div>
+
+    <!-- Message généré -->
+    <div class="prompt-wrap" id="promptWrap" style="display:none">
+      <h3>📋 Message prêt à coller dans Claude.ai</h3>
+      <div class="prompt-box" id="promptBox"></div>
+      <div class="prompt-actions">
+        <button class="btn-copy" id="btnCopy">📋 Copier le message</button>
+        <a class="btn-claude" href="https://claude.ai" target="_blank" rel="noopener">Ouvrir Claude.ai ↗</a>
+      </div>
+    </div>
+
+    <!-- Ajouter à la liste (sans API) -->
+    <div id="naAddBlock" style="display:none" class="add-block">
+      <h3>✅ Ajouter à ma liste</h3>
+      <p>Complète les champs manquants si besoin (ville, état exact…) puis sauvegarde.</p>
+      <div class="add-fields">
+        <div class="form-group"><label>Nom *</label><input type="text" id="na-add-name"></div>
+        <div class="form-group"><label>Prix (€) *</label><input type="number" id="na-add-price" min="0" step="0.5"></div>
+        <div class="form-group"><label>Ville / CP</label><input type="text" id="na-add-city" placeholder="ex: Marseille"></div>
+        <div class="form-group"><label>État *</label>
+          <select id="na-add-state"><option value="">—</option><option value="TB">TB</option><option value="B">B</option><option value="M">M</option></select>
+        </div>
+        <div class="form-group"><label>Plateforme *</label>
+          <select id="na-add-platform"><option value="">—</option><option value="Leboncoin">Leboncoin</option><option value="Vinted">Vinted</option><option value="Okkazeo">Okkazeo</option></select>
+        </div>
+        <div class="form-group"><label>Lien</label><input type="url" id="na-add-url"></div>
+      </div>
+      <button class="btn-do-add" id="naBtnDoAdd">💾 Ajouter à ma liste</button>
+    </div>
+
+  </div>
+</main>
+
+<script>
+// ═══════════════════════════════════
+// STORAGE & UTILS
+// ═══════════════════════════════════
+const SK = 'chasse-jeux-v1';
+const AK = 'chasse-jeux-apikey';
+let games = JSON.parse(localStorage.getItem(SK) || '[]');
+let editId = null, showBought = false, currentFilter = 'all';
+const save   = () => localStorage.setItem(SK, JSON.stringify(games));
+const uid    = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
+const esc    = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const getKey = () => localStorage.getItem(AK) || '';
+
+// ═══════════════════════════════════
+// SCORE
+// ═══════════════════════════════════
+function computeScore(g, all) {
+  const px = all.map(x=>x.price).filter(p=>p>0);
+  if (!px.length) return 50;
+  const mx=Math.max(...px), mn=Math.min(...px), rng=mx-mn||1;
+  return Math.round((100-((g.price-mn)/rng)*100)*0.6 + ({TB:100,B:65,M:30}[g.state]??50)*0.4);
+}
+
+// ═══════════════════════════════════
+// RENDER SUIVI
+// ═══════════════════════════════════
+function render() {
+  updateStats();
+  let list = games.map(g=>({...g,score:computeScore(g,games)}));
+  if (!showBought) list = list.filter(g=>!g.bought);
+  if (currentFilter!=='all') list = list.filter(g=>g.platform===currentFilter||g.state===currentFilter);
+  const s = document.getElementById('sortSelect').value;
+  if(s==='score') list.sort((a,b)=>b.score-a.score);
+  else if(s==='price_asc') list.sort((a,b)=>a.price-b.price);
+  else if(s==='price_desc') list.sort((a,b)=>b.price-a.price);
+  else if(s==='name') list.sort((a,b)=>a.name.localeCompare(b.name));
+  else list.sort((a,b)=>b.createdAt-a.createdAt);
+  const c = document.getElementById('game-list');
+  document.getElementById('listCount').textContent = `${list.length} annonce${list.length!==1?'s':''}`;
+  if(!list.length){c.innerHTML=`<div class="empty"><span>🎲</span>Aucune annonce.<br>Ajoutez votre première chasse !</div>`;return;}
+  c.innerHTML = list.map(g=>cardHTML(g)).join('');
+  c.querySelectorAll('.btn-sm.del').forEach(b=>b.addEventListener('click',()=>delGame(b.dataset.id)));
+  c.querySelectorAll('.btn-sm.edit').forEach(b=>b.addEventListener('click',()=>openEdit(b.dataset.id)));
+  c.querySelectorAll('[type="checkbox"]').forEach(cb=>cb.addEventListener('change',()=>toggleBought(cb.dataset.id,cb.checked)));
+  c.querySelectorAll('.btn-sm.ana').forEach(b=>b.addEventListener('click',()=>prefillAnalyse(b.dataset.id)));
+}
+
+const plCls = p=>({Leboncoin:'badge-lbc',Vinted:'badge-vinted',Okkazeo:'badge-okk'}[p]||'');
+const stCls = s=>({TB:'badge-tb',B:'badge-b',M:'badge-m'}[s]||'');
+
+function cardHTML(g) {
+  const link = g.url?`<a href="${esc(g.url)}" target="_blank" rel="noopener">🔗 Annonce</a>`:'';
+  const city = g.city?`📍 ${esc(g.city)}`:'';
+  return `<div class="card ${g.bought?'bought':''}" data-id="${g.id}">
+    <div class="card-left">
+      <div class="card-top">
+        <span class="card-name">${esc(g.name)}</span>
+        <span class="badge ${plCls(g.platform)}">${esc(g.platform)}</span>
+        <span class="badge ${stCls(g.state)}">${esc(g.state)}</span>
+      </div>
+      <div class="card-meta">${city}${link}</div>
+      <div class="card-actions">
+        <label class="check-label"><input type="checkbox" data-id="${g.id}" ${g.bought?'checked':''}>Acheté</label>
+        <button class="btn-sm edit" data-id="${g.id}">✏️</button>
+        <button class="btn-sm ana" data-id="${g.id}">🤖 Analyser</button>
+        <button class="btn-sm del" data-id="${g.id}">🗑</button>
+      </div>
+    </div>
+    <div class="card-right">
+      <div class="card-price">${g.price.toFixed(2)} €</div>
+      <div class="score-pill">Score ${g.score}</div>
+    </div>
+  </div>`;
+}
+
+function updateStats() {
+  const total=games.length, bought=games.filter(g=>g.bought).length;
+  const px=games.filter(g=>!g.bought&&g.price>0).map(g=>g.price);
+  const avg=px.length?(px.reduce((a,b)=>a+b,0)/px.length).toFixed(2)+'€':'—';
+  const sc=games.map(g=>computeScore(g,games));
+  const best=sc.length?Math.max(...sc):null;
+  const bestG=best!==null?games[sc.indexOf(best)]:null;
+  document.getElementById('stat-total').textContent=total;
+  document.getElementById('stat-bought').textContent=bought;
+  document.getElementById('stat-avg').textContent=avg;
+  document.getElementById('stat-best').textContent=bestG?`${best} — ${bestG.name.slice(0,10)}${bestG.name.length>10?'…':''}`:'—';
+}
+
+// ═══════════════════════════════════
+// CRUD
+// ═══════════════════════════════════
+function getForm(){return{name:document.getElementById('f-name').value.trim(),price:parseFloat(document.getElementById('f-price').value)||0,city:document.getElementById('f-city').value.trim(),state:document.getElementById('f-state').value,platform:document.getElementById('f-platform').value,url:document.getElementById('f-url').value.trim()};}
+function validForm(v){if(!v.name){alert('Nom requis.');return false;}if(!v.state){alert('État requis.');return false;}if(!v.platform){alert('Plateforme requise.');return false;}return true;}
+function saveGame(){const v=getForm();if(!validForm(v))return;if(editId){const i=games.findIndex(g=>g.id===editId);if(i!==-1)games[i]={...games[i],...v};}else games.push({id:uid(),createdAt:Date.now(),bought:false,...v});save();closeModal();render();}
+function delGame(id){if(!confirm('Supprimer ?'))return;games=games.filter(g=>g.id!==id);save();render();}
+function toggleBought(id,ch){const g=games.find(g=>g.id===id);if(g){g.bought=ch;save();render();}}
+function openAdd(){editId=null;document.getElementById('modal-title').textContent='Nouvelle annonce';clearForm();document.getElementById('overlay').classList.add('open');}
+function openEdit(id){const g=games.find(g=>g.id===id);if(!g)return;editId=id;document.getElementById('modal-title').textContent="Modifier l'annonce";['name','price','city','state','platform','url'].forEach(k=>document.getElementById('f-'+k).value=g[k]||'');document.getElementById('overlay').classList.add('open');}
+function closeModal(){document.getElementById('overlay').classList.remove('open');clearForm();editId=null;}
+function clearForm(){['f-name','f-price','f-city','f-url'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-state').value='';document.getElementById('f-platform').value='';}
+
+// ═══════════════════════════════════
+// TABS
+// ═══════════════════════════════════
+document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',function(){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  this.classList.add('active');
+  document.getElementById('tab-'+this.dataset.tab).classList.add('active');
+}));
+
+// ═══════════════════════════════════
+// API KEY UI
+// ═══════════════════════════════════
+function initKeyUI(){
+  const key=getKey();
+  document.getElementById('apiDot').classList.toggle('ok',!!key);
+  document.getElementById('keyStatus').textContent=key?'✅ Clé configurée et prête.':'Non configurée.';
+  document.getElementById('keyStatus').className=key?'key-status ok':'key-status';
+  document.getElementById('btnKeyDel').style.display=key?'inline-block':'none';
+  document.getElementById('apiToggleIcon').textContent=key?'▼ Modifier':'▲ Masquer';
+  if(key){document.getElementById('apiKeyInput').value='••••••••••••••••••••••••';document.getElementById('apiBody').classList.add('hidden');}
+  else document.getElementById('apiBody').classList.remove('hidden');
+}
+document.getElementById('apiToggle').addEventListener('click',()=>{
+  const body=document.getElementById('apiBody');
+  const hidden=body.classList.toggle('hidden');
+  document.getElementById('apiToggleIcon').textContent=hidden?'▼ Modifier':'▲ Masquer';
+});
+document.getElementById('btnKeySave').addEventListener('click',()=>{
+  const val=document.getElementById('apiKeyInput').value.trim();
+  if(!val||val.includes('•')){setKeyStatus('Entre une vraie clé.','err');return;}
+  if(!val.startsWith('sk-ant-')){setKeyStatus('Doit commencer par sk-ant-…','err');return;}
+  localStorage.setItem(AK,val);initKeyUI();
+});
+document.getElementById('btnKeyDel').addEventListener('click',()=>{
+  if(!confirm('Supprimer la clé ?'))return;
+  localStorage.removeItem(AK);document.getElementById('apiKeyInput').value='';initKeyUI();
+});
+function setKeyStatus(msg,cls){const el=document.getElementById('keyStatus');el.textContent=msg;el.className='key-status '+cls;}
+
+// ═══════════════════════════════════
+// DETECT PLATFORM
+// ═══════════════════════════════════
+function detectPlatform(url){
+  if(!url)return'';
+  if(url.includes('leboncoin.fr'))return'Leboncoin';
+  if(url.includes('vinted.fr')||url.includes('vinted.com'))return'Vinted';
+  if(url.includes('okkazeo.com'))return'Okkazeo';
+  return'';
+}
+function applyDetect(url,platformEl,tagEl){
+  const pl=detectPlatform(url);
+  if(pl){document.getElementById(platformEl).value=pl;document.getElementById(tagEl).innerHTML=`<span class="detected-tag">✅ ${pl} détecté</span>`;}
+  return pl;
+}
+document.getElementById('btnDetect').addEventListener('click',()=>{
+  const url=document.getElementById('a-url').value.trim();
+  if(!url){alert('Colle d\'abord le lien.');return;}
+  if(!applyDetect(url,'a-platform','detectedTag'))document.getElementById('detectedTag').innerHTML=`<span class="detected-tag" style="border-color:rgba(240,192,64,.3);color:var(--yellow)">⚠️ Non reconnue — choisis manuellement</span>`;
+});
+document.getElementById('a-url').addEventListener('change',()=>applyDetect(document.getElementById('a-url').value.trim(),'a-platform','detectedTag'));
+document.getElementById('naBtnDetect').addEventListener('click',()=>{
+  const url=document.getElementById('na-url').value.trim();
+  if(!url){alert('Colle d\'abord le lien.');return;}
+  if(!applyDetect(url,'na-platform','naDetectedTag'))document.getElementById('naDetectedTag').innerHTML=`<span class="detected-tag" style="border-color:rgba(240,192,64,.3);color:var(--yellow)">⚠️ Non reconnue — choisis manuellement</span>`;
+  updatePrompt();
+});
+document.getElementById('na-url').addEventListener('change',()=>{applyDetect(document.getElementById('na-url').value.trim(),'na-platform','naDetectedTag');updatePrompt();});
+
+// ═══════════════════════════════════
+// PREFILL DEPUIS CARTE
+// ═══════════════════════════════════
+function prefillAnalyse(id){
+  const g=games.find(g=>g.id===id);if(!g)return;
+  // Remplir les deux onglets
+  ['a','na'].forEach(p=>{
+    document.getElementById(p+'-name').value=g.name;
+    document.getElementById(p+'-price').value=g.price;
+    document.getElementById(p+'-state').value=g.state||'';
+    document.getElementById(p+'-platform').value=g.platform||'';
+    document.getElementById(p+'-url').value=g.url||'';
+    if(g.url)applyDetect(g.url,p+'-platform',p==='a'?'detectedTag':'naDetectedTag');
+  });
+  // Aller sur l'onglet API si clé présente, sinon sans API
+  const tabTarget = getKey() ? 'api' : 'noapi';
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector(`[data-tab="${tabTarget}"]`).classList.add('active');
+  document.getElementById('tab-'+tabTarget).classList.add('active');
+  document.getElementById('analyseResult').innerHTML='';
+  document.getElementById('addBlock').style.display='none';
+  updatePrompt();
+  setTimeout(()=>document.getElementById(tabTarget==='api'?'a-name':'na-name').scrollIntoView({behavior:'smooth',block:'center'}),100);
+}
+
+// ═══════════════════════════════════
+// ANALYSE AVEC API
+// ═══════════════════════════════════
+const SYSTEM=`Tu es un expert en jeux de societe d'occasion, specialise dans la rentabilite achats/reventes sur le marche francais (Vinted, Leboncoin, Okkazeo, Philibert, Amazon FR).
+
+REGLES :
+1. Utilise la recherche web pour trouver les VRAIS prix actuels. Ne jamais estimer.
+2. Regle : ne pas acheter a plus de 65% du prix de revente occasion estime.
+3. Mondial Relay tarifs : moins de 500g=3.49EUR / moins de 1kg=4.29EUR / moins de 2kg=4.79EUR / moins de 5kg=5.49EUR / moins de 10kg=6.49EUR.
+4. VERDICT : ACHETE si prix+MR inferieur ou egal 65% prix occasion / NEGOCIE si legerement au-dessus / PASSE si trop cher.
+
+Reponds UNIQUEMENT avec un JSON valide sans texte avant ou apres :
+{"jeu":"nom exact","prix_neuf":"XX EUR","prix_occasion_moyen":"XX-XX EUR","frais_mr":"X.XX EUR poids ~Xkg","prix_max_sans_mr":"XX EUR","prix_max_avec_mr":"XX EUR","marge":"XX EUR","revente":"Facile ou Moyenne ou Difficile","raison_revente":"courte explication","verdict":"ACHETE ou NEGOCIE ou PASSE","justification":"1-2 phrases","conseil":"conseil si NEGOCIE sinon vide","attention":"points a verifier"}`;
+
+document.getElementById('btnAnalyse').addEventListener('click', runAnalyse);
+
+async function runAnalyse(){
+  const key=getKey();
+  if(!key){
+    document.getElementById('apiBody').classList.remove('hidden');
+    document.getElementById('apiToggleIcon').textContent='▲ Masquer';
+    alert('Configure d\'abord ta clé API en haut de cette page.\nSi tu n\'en as pas, utilise l\'onglet "Sans clé API".');
+    return;
+  }
+  const name=document.getElementById('a-name').value.trim();
+  const price=parseFloat(document.getElementById('a-price').value)||0;
+  const state=document.getElementById('a-state').value;
+  const platform=document.getElementById('a-platform').value;
+  const shipping=document.getElementById('a-shipping').value||'mondial_relay';
+  const notes=document.getElementById('a-notes').value.trim();
+  const url=document.getElementById('a-url').value.trim();
+  if(!name){alert('Entre le nom du jeu.');return;}
+  if(!price){alert('Entre le prix demandé.');return;}
+  const stLbl=({TB:'Tres bon etat',B:'Bon etat',M:'Moyen etat'}[state])||'etat non precise';
+  const shLbl=({mondial_relay:'Mondial Relay',colissimo:'Colissimo',main_propre:'Main propre',non_precise:'Non precise'}[shipping])||'Mondial Relay';
+  const parts=['Analyse cette annonce de jeu de societe :',''];
+  if(url)parts.push('Lien : '+url);
+  parts.push('Jeu : '+name,'Prix : '+price+' EUR','Etat : '+stLbl);
+  if(platform)parts.push('Plateforme : '+platform);
+  parts.push('Livraison : '+shLbl);
+  if(notes)parts.push('Infos : '+notes);
+  parts.push('','Recherche les prix actuels et fournis ton analyse JSON.');
+  const msg=parts.join('\n');
+
+  const res=document.getElementById('analyseResult');
+  res.innerHTML=`<div class="loading-pulse"><div class="pulse-dot"></div><div class="pulse-dot"></div><div class="pulse-dot"></div><span>Recherche des prix en cours…</span></div>`;
+  document.getElementById('addBlock').style.display='none';
+  const btn=document.getElementById('btnAnalyse');
+  btn.disabled=true;btn.textContent='⏳ En cours…';
+
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:2000,system:SYSTEM,tools:[{type:'web_search_20250305',name:'web_search'}],messages:[{role:'user',content:msg}]})
+    });
+    const data=await resp.json();
+    if(!resp.ok)throw new Error(data?.error?.message||'Erreur API '+resp.status);
+    const text=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+    if(!text)throw new Error('Aucune réponse. Clé API invalide ou épuisée ?');
+    const match=text.match(/\{[\s\S]*?\}/);
+    if(!match)throw new Error('Format inattendu. Réessaie.');
+    const r=JSON.parse(match[0]);
+    if(r.verdict==='ACHETE')r.verdict='ACHÈTE';
+    if(r.verdict==='NEGOCIE')r.verdict='NÉGOCIE';
+    showResult(r,name,price,state,platform,url);
+  }catch(err){
+    console.error(err);
+    let hint='';
+    if(err.message.includes('401')||err.message.includes('auth'))hint='<br><br>💡 Clé invalide. Supprime-la et entre-la à nouveau.';
+    else if(err.message.includes('fetch')||err.message.includes('Failed'))hint='<br><br>💡 Erreur réseau. Si tu ouvres ce fichier depuis ton bureau (file://), utilise l\'onglet <strong>Sans clé API</strong> à la place.';
+    else if(err.message.includes('429'))hint='<br><br>💡 Trop de requêtes. Attends quelques secondes.';
+    res.innerHTML=`<div class="error-box"><div class="error-title">❌ Erreur</div><div class="error-msg">${esc(err.message)}${hint}</div></div>`;
+  }finally{
+    btn.disabled=false;btn.textContent='🔍 Analyser la rentabilité';
+  }
+}
+
+function showResult(r,origName,origPrice,origState,origPlatform,origUrl){
+  const vCls=({ACHÈTE:'v-achete',NÉGOCIE:'v-negocie',PASSE:'v-passe'})[r.verdict]||'v-negocie';
+  const revCls=({Facile:'rev-facile',Moyenne:'rev-moyenne',Difficile:'rev-difficile'})[r.revente]||'rev-moyenne';
+  const maxNum=parseFloat(String(r.prix_max_avec_mr||'').replace(/[^\d.,]/g,'').replace(',','.'))||0;
+  const margeNum=parseFloat(String(r.marge||'').replace(/[^\d.,-]/g,'').replace(',','.'))||0;
+  document.getElementById('analyseResult').innerHTML=`
+<div class="result-wrap"><div class="result-card">
+  <div class="result-header">
+    <div class="result-game">${esc(r.jeu||origName)}</div>
+    <div class="vp ${vCls}">${r.verdict}</div>
+  </div>
+  <div class="result-grid">
+    <div class="rcell"><div class="rcell-label">Prix neuf</div><div class="rcell-val">${esc(r.prix_neuf)}</div></div>
+    <div class="rcell"><div class="rcell-label">Prix occasion moyen</div><div class="rcell-val">${esc(r.prix_occasion_moyen)}</div></div>
+    <div class="rcell"><div class="rcell-label">Frais MR estimés</div><div class="rcell-val">${esc(r.frais_mr)}</div></div>
+    <div class="rcell"><div class="rcell-label">Prix max à payer</div><div class="rcell-val g">${esc(r.prix_max_avec_mr)}</div></div>
+    <div class="rcell"><div class="rcell-label">Prix demandé</div><div class="rcell-val ${origPrice<=maxNum?'g':'r'}">${origPrice.toFixed(2)}€</div></div>
+    <div class="rcell"><div class="rcell-label">Marge si revente</div><div class="rcell-val ${margeNum>5?'g':margeNum>0?'y':'r'}">${esc(r.marge)}</div></div>
+  </div>
+  <div class="result-body">
+    <div class="rsec"><div class="rsec-label">Facilité de revente</div><div class="rsec-text"><span class="rev-badge ${revCls}">${esc(r.revente)}</span>${esc(r.raison_revente)}</div></div>
+    <div class="rsec"><div class="rsec-label">Justification</div><div class="rsec-text">${esc(r.justification)}</div></div>
+    ${r.conseil?`<div class="rsec"><div class="rsec-label">💬 Conseil de négociation</div><div class="conseil-box">${esc(r.conseil)}</div></div>`:''}
+    ${r.attention?`<div class="rsec"><div class="rsec-label">⚠️ Points d'attention</div><div class="rsec-text">${esc(r.attention)}</div></div>`:''}
+  </div>
+  <div class="result-footer">🚚 <span>Mondial Relay</span> — frais intégrés dans le calcul du prix max.</div>
+</div></div>`;
+  document.getElementById('add-name').value=r.jeu||origName;
+  document.getElementById('add-price').value=origPrice;
+  document.getElementById('add-state').value=origState||'';
+  document.getElementById('add-platform').value=origPlatform||'';
+  document.getElementById('add-url').value=origUrl||'';
+  document.getElementById('add-city').value='';
+  document.getElementById('addBlock').style.display='block';
+  document.getElementById('analyseResult').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ═══════════════════════════════════
+// AJOUTER À LA LISTE (API)
+// ═══════════════════════════════════
+function addToList(nameId,priceId,cityId,stateId,platformId,urlId,btnId){
+  const v={name:document.getElementById(nameId).value.trim(),price:parseFloat(document.getElementById(priceId).value)||0,city:document.getElementById(cityId).value.trim(),state:document.getElementById(stateId).value,platform:document.getElementById(platformId).value,url:document.getElementById(urlId).value.trim()};
+  if(!v.name){alert('Nom requis.');return;}
+  if(!v.state){alert('Sélectionne l\'état.');return;}
+  if(!v.platform){alert('Sélectionne la plateforme.');return;}
+  games.push({id:uid(),createdAt:Date.now(),bought:false,...v});
+  save();render();
+  const btn=document.getElementById(btnId);
+  btn.textContent='✅ Ajouté !';btn.classList.add('success');btn.disabled=true;
+  setTimeout(()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    document.querySelector('[data-tab="suivi"]').classList.add('active');
+    document.getElementById('tab-suivi').classList.add('active');
+    btn.textContent='💾 Ajouter à ma liste';btn.classList.remove('success');btn.disabled=false;
+    setTimeout(()=>{const f=document.getElementById('game-list').querySelector('.card');if(f){f.style.borderColor='var(--accent)';setTimeout(()=>f.style.borderColor='',2500);}},100);
+  },1200);
+}
+document.getElementById('btnDoAdd').addEventListener('click',()=>addToList('add-name','add-price','add-city','add-state','add-platform','add-url','btnDoAdd'));
+document.getElementById('naBtnDoAdd').addEventListener('click',()=>addToList('na-add-name','na-add-price','na-add-city','na-add-state','na-add-platform','na-add-url','naBtnDoAdd'));
+
+// ═══════════════════════════════════
+// ONGLET SANS API — GÉNÉRATION PROMPT
+// ═══════════════════════════════════
+const SHIPPING_LBL={mondial_relay:'Mondial Relay (choix de l\'acheteur)',colissimo:'Colissimo',main_propre:'Main propre uniquement',non_precise:'Non précisé'};
+const STATE_LBL={TB:'Très bon état (TB)',B:'Bon état (B)',M:'Moyen état (M)'};
+
+function buildPrompt(){
+  const url=document.getElementById('na-url').value.trim();
+  const name=document.getElementById('na-name').value.trim();
+  const price=document.getElementById('na-price').value.trim();
+  const state=document.getElementById('na-state').value;
+  const platform=document.getElementById('na-platform').value;
+  const shipping=document.getElementById('na-shipping').value||'mondial_relay';
+  const notes=document.getElementById('na-notes').value.trim();
+  const lines=[
+    'Analyse cette annonce de jeu de société d\'occasion :','',
+    ...(url?['🔗 Lien : '+url]:[]),
+    ...(name?['🎲 Jeu : '+name]:[]),
+    ...(price?['💶 Prix demandé : '+price+'€']:[]),
+    '📦 État : '+(STATE_LBL[state]||'non précisé'),
+    ...(platform?['🛒 Plateforme : '+platform]:[]),
+    '🚚 Livraison : '+(SHIPPING_LBL[shipping]||'Mondial Relay'),
+    ...(notes?['📝 Infos : '+notes]:[]),
+    '',
+    '--- RÈGLES ---',
+    'AVANT TOUT : recherche les prix réels actuels sur Vinted, Leboncoin, Okkazeo, Philibert, Amazon FR.',
+    'Règle : ne jamais payer plus de 65% du prix de revente occasion estimé.',
+    'Mondial Relay (tarifs) : <500g=3,49€ / <1kg=4,29€ / <2kg=4,79€ / <5kg=5,49€ / <10kg=6,49€. Déduis ces frais du prix max.',
+    '',
+    'Format de réponse souhaité :',
+    '🎲 Jeu identifié : [nom exact]',
+    '🏷️ Prix neuf constaté : [prix + source]',
+    '♻️ Prix occasion moyen : [fourchette]',
+    '🚚 Frais Mondial Relay estimés : [tarif + poids estimé]',
+    '💰 Prix max à payer (sans frais) : [65% du prix occasion]',
+    '✅ Prix max à payer (frais MR déduits) : [prix max - frais MR]',
+    '📈 Marge estimée si revente : [prix occasion - prix achat]',
+    '🔄 Facilité de revente : Facile / Moyenne / Difficile',
+    '🏆 VERDICT : ACHÈTE / NÉGOCIE / PASSE',
+    '💬 Conseil : [argument de négociation si NÉGOCIE]',
+    '⚠️ Points d\'attention : [état, édition, pièces manquantes…]',
+  ];
+  return lines.join('\n');
+}
+
+function updatePrompt(){
+  const name=document.getElementById('na-name').value.trim();
+  const url=document.getElementById('na-url').value.trim();
+  const price=document.getElementById('na-price').value.trim();
+  if(!name&&!url){
+    document.getElementById('promptWrap').style.display='none';
+    document.getElementById('naAddBlock').style.display='none';
+    return;
+  }
+  document.getElementById('promptBox').textContent=buildPrompt();
+  document.getElementById('promptWrap').style.display='block';
+  // Pré-remplir le bloc ajout
+  document.getElementById('na-add-name').value=name;
+  document.getElementById('na-add-price').value=price;
+  document.getElementById('na-add-state').value=document.getElementById('na-state').value;
+  document.getElementById('na-add-platform').value=document.getElementById('na-platform').value;
+  document.getElementById('na-add-url').value=url;
+  document.getElementById('naAddBlock').style.display='block';
+}
+
+['na-url','na-name','na-price','na-state','na-platform','na-shipping','na-notes'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el){el.addEventListener('input',updatePrompt);el.addEventListener('change',updatePrompt);}
+});
+
+document.getElementById('btnCopy').addEventListener('click',function(){
+  const txt=document.getElementById('promptBox').textContent;
+  navigator.clipboard.writeText(txt).catch(()=>{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});
+  this.textContent='✅ Copié !';this.classList.add('ok');
+  setTimeout(()=>{this.textContent='📋 Copier le message';this.classList.remove('ok');},2500);
+});
+
+// ═══════════════════════════════════
+// EVENTS GLOBAUX
+// ═══════════════════════════════════
+document.getElementById('openAdd').addEventListener('click',openAdd);
+document.getElementById('cancelBtn').addEventListener('click',closeModal);
+document.getElementById('saveBtn').addEventListener('click',saveGame);
+document.getElementById('sortSelect').addEventListener('change',render);
+document.getElementById('overlay').addEventListener('click',e=>{if(e.target===document.getElementById('overlay'))closeModal();});
+document.getElementById('toggleBought').addEventListener('click',function(){
+  showBought=!showBought;this.classList.toggle('active',showBought);
+  this.textContent=showBought?'Masquer achetés':'Afficher achetés';render();
+});
+document.querySelectorAll('.filter-btn').forEach(btn=>btn.addEventListener('click',function(){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  this.classList.add('active');currentFilter=this.dataset.filter;render();
+}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+// INIT
+initKeyUI();
+render();
+</script>
+</body>
+</html>

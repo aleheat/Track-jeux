@@ -332,32 +332,15 @@
 
     <!-- Formulaire -->
     <div class="analyse-block">
-      <h3>📦 Annonce à analyser</h3>
+      <h3>📦 Colle le lien — l'IA fait le reste</h3>
       <div class="form-group">
-        <label>🔗 Lien de l'annonce</label>
-        <div class="url-row">
-          <input type="url" id="a-url" placeholder="https://www.vinted.fr/items/… ou leboncoin.fr/…">
-          <button class="btn-detect" id="btnDetect">Détecter</button>
-        </div>
-        <div id="detectedTag"></div>
+        <label>🔗 Lien de l'annonce *</label>
+        <input type="url" id="a-url" placeholder="https://www.vinted.fr/items/… ou leboncoin.fr/… ou okkazeo.com/…">
+        <div id="detectedTag" style="margin-top:7px"></div>
       </div>
-      <div class="form-group"><label>Nom du jeu *</label><input type="text" id="a-name" placeholder="ex: Final Girl, Wingspan…"></div>
-      <div class="form-row">
-        <div class="form-group"><label>Prix demandé (€) *</label><input type="number" id="a-price" placeholder="0" min="0" step="0.5"></div>
-        <div class="form-group"><label>État</label>
-          <select id="a-state"><option value="">— Non précisé —</option><option value="TB">TB — Très bon</option><option value="B">B — Bon</option><option value="M">M — Moyen</option></select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Plateforme</label>
-          <select id="a-platform"><option value="">— Choisir —</option><option value="Leboncoin">Leboncoin</option><option value="Vinted">Vinted</option><option value="Okkazeo">Okkazeo</option></select>
-        </div>
-        <div class="form-group"><label>Livraison</label>
-          <select id="a-shipping"><option value="mondial_relay">Mondial Relay (mon choix)</option><option value="colissimo">Colissimo</option><option value="main_propre">Main propre</option><option value="non_precise">Non précisé</option></select>
-        </div>
-      </div>
-      <div class="form-group"><label>Infos supplémentaires</label>
-        <textarea id="a-notes" placeholder="ex: édition française, avec extension, il manque 2 billets…"></textarea>
+      <div class="form-group" style="margin-top:4px">
+        <label style="color:var(--muted)">📝 Infos supplémentaires <span style="font-size:.65rem;opacity:.7">(optionnel)</span></label>
+        <textarea id="a-notes" placeholder="ex: manque des pièces, édition anglaise, lot de 3 jeux…" style="min-height:55px"></textarea>
       </div>
       <button class="btn-analyse" id="btnAnalyse">🔍 Analyser la rentabilité</button>
     </div>
@@ -395,32 +378,15 @@
 
     <!-- Formulaire sans API -->
     <div class="analyse-block">
-      <h3>📦 Annonce à analyser</h3>
+      <h3>📦 Colle le lien — l'IA fait le reste</h3>
       <div class="form-group">
-        <label>🔗 Lien de l'annonce</label>
-        <div class="url-row">
-          <input type="url" id="na-url" placeholder="https://www.vinted.fr/items/… ou leboncoin.fr/…">
-          <button class="btn-detect" id="naBtnDetect">Détecter</button>
-        </div>
-        <div id="naDetectedTag"></div>
+        <label>🔗 Lien de l'annonce *</label>
+        <input type="url" id="na-url" placeholder="https://www.vinted.fr/items/… ou leboncoin.fr/… ou okkazeo.com/…">
+        <div id="naDetectedTag" style="margin-top:7px"></div>
       </div>
-      <div class="form-group"><label>Nom du jeu *</label><input type="text" id="na-name" placeholder="ex: Final Girl, Wingspan…"></div>
-      <div class="form-row">
-        <div class="form-group"><label>Prix demandé (€)</label><input type="number" id="na-price" placeholder="0" min="0" step="0.5"></div>
-        <div class="form-group"><label>État</label>
-          <select id="na-state"><option value="">— Non précisé —</option><option value="TB">TB — Très bon</option><option value="B">B — Bon</option><option value="M">M — Moyen</option></select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Plateforme</label>
-          <select id="na-platform"><option value="">— Choisir —</option><option value="Leboncoin">Leboncoin</option><option value="Vinted">Vinted</option><option value="Okkazeo">Okkazeo</option></select>
-        </div>
-        <div class="form-group"><label>Livraison</label>
-          <select id="na-shipping"><option value="mondial_relay">Mondial Relay (mon choix)</option><option value="colissimo">Colissimo</option><option value="main_propre">Main propre</option><option value="non_precise">Non précisé</option></select>
-        </div>
-      </div>
-      <div class="form-group"><label>Infos supplémentaires</label>
-        <textarea id="na-notes" placeholder="ex: édition française, avec extension, il manque 2 billets…"></textarea>
+      <div class="form-group" style="margin-top:4px">
+        <label style="color:var(--muted)">📝 Infos supplémentaires <span style="font-size:.65rem;opacity:.7">(optionnel)</span></label>
+        <textarea id="na-notes" placeholder="ex: manque des pièces, édition anglaise, lot de 3 jeux…" style="min-height:55px"></textarea>
       </div>
     </div>
 
@@ -612,36 +578,16 @@ function applyDetect(url,platformEl,tagEl){
   if(pl){document.getElementById(platformEl).value=pl;document.getElementById(tagEl).innerHTML=`<span class="detected-tag">✅ ${pl} détecté</span>`;}
   return pl;
 }
-document.getElementById('btnDetect').addEventListener('click',()=>{
-  const url=document.getElementById('a-url').value.trim();
-  if(!url){alert('Colle d\'abord le lien.');return;}
-  if(!applyDetect(url,'a-platform','detectedTag'))document.getElementById('detectedTag').innerHTML=`<span class="detected-tag" style="border-color:rgba(240,192,64,.3);color:var(--yellow)">⚠️ Non reconnue — choisis manuellement</span>`;
-});
-document.getElementById('a-url').addEventListener('change',()=>applyDetect(document.getElementById('a-url').value.trim(),'a-platform','detectedTag'));
-document.getElementById('naBtnDetect').addEventListener('click',()=>{
-  const url=document.getElementById('na-url').value.trim();
-  if(!url){alert('Colle d\'abord le lien.');return;}
-  if(!applyDetect(url,'na-platform','naDetectedTag'))document.getElementById('naDetectedTag').innerHTML=`<span class="detected-tag" style="border-color:rgba(240,192,64,.3);color:var(--yellow)">⚠️ Non reconnue — choisis manuellement</span>`;
-  updatePrompt();
-});
-document.getElementById('na-url').addEventListener('change',()=>{applyDetect(document.getElementById('na-url').value.trim(),'na-platform','naDetectedTag');updatePrompt();});
+document.getElementById('na-url').addEventListener('change',updatePrompt);
 
 // ═══════════════════════════════════
 // PREFILL DEPUIS CARTE
 // ═══════════════════════════════════
 function prefillAnalyse(id){
   const g=games.find(g=>g.id===id);if(!g)return;
-  // Remplir les deux onglets
-  ['a','na'].forEach(p=>{
-    document.getElementById(p+'-name').value=g.name;
-    document.getElementById(p+'-price').value=g.price;
-    document.getElementById(p+'-state').value=g.state||'';
-    document.getElementById(p+'-platform').value=g.platform||'';
-    document.getElementById(p+'-url').value=g.url||'';
-    if(g.url)applyDetect(g.url,p+'-platform',p==='a'?'detectedTag':'naDetectedTag');
-  });
-  // Aller sur l'onglet API si clé présente, sinon sans API
-  const tabTarget = getKey() ? 'api' : 'noapi';
+  document.getElementById('a-url').value=g.url||'';
+  document.getElementById('na-url').value=g.url||'';
+  const tabTarget=getKey()?'api':'noapi';
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelector(`[data-tab="${tabTarget}"]`).classList.add('active');
@@ -649,7 +595,7 @@ function prefillAnalyse(id){
   document.getElementById('analyseResult').innerHTML='';
   document.getElementById('addBlock').style.display='none';
   updatePrompt();
-  setTimeout(()=>document.getElementById(tabTarget==='api'?'a-name':'na-name').scrollIntoView({behavior:'smooth',block:'center'}),100);
+  setTimeout(()=>document.getElementById('a-url').scrollIntoView({behavior:'smooth',block:'center'}),100);
 }
 
 // ═══════════════════════════════════
@@ -657,14 +603,18 @@ function prefillAnalyse(id){
 // ═══════════════════════════════════
 const SYSTEM=`Tu es un expert en jeux de societe d'occasion, specialise dans la rentabilite achats/reventes sur le marche francais (Vinted, Leboncoin, Okkazeo, Philibert, Amazon FR).
 
-REGLES :
-1. Utilise la recherche web pour trouver les VRAIS prix actuels. Ne jamais estimer.
-2. Regle : ne pas acheter a plus de 65% du prix de revente occasion estime.
-3. Mondial Relay tarifs : moins de 500g=3.49EUR / moins de 1kg=4.29EUR / moins de 2kg=4.79EUR / moins de 5kg=5.49EUR / moins de 10kg=6.49EUR.
-4. VERDICT : ACHETE si prix+MR inferieur ou egal 65% prix occasion / NEGOCIE si legerement au-dessus / PASSE si trop cher.
+MISSION : A partir du lien fourni, tu dois :
+1. Visiter le lien et extraire : nom exact du jeu, prix demande, etat, plateforme.
+2. Rechercher les prix actuels sur le marche francais (Vinted, Leboncoin, Okkazeo, boutiques).
+3. Calculer la rentabilite selon les regles ci-dessous.
 
-Reponds UNIQUEMENT avec un JSON valide sans texte avant ou apres :
-{"jeu":"nom exact","prix_neuf":"XX EUR","prix_occasion_moyen":"XX-XX EUR","frais_mr":"X.XX EUR poids ~Xkg","prix_max_sans_mr":"XX EUR","prix_max_avec_mr":"XX EUR","marge":"XX EUR","revente":"Facile ou Moyenne ou Difficile","raison_revente":"courte explication","verdict":"ACHETE ou NEGOCIE ou PASSE","justification":"1-2 phrases","conseil":"conseil si NEGOCIE sinon vide","attention":"points a verifier"}`;
+REGLES :
+- Ne jamais payer plus de 65% du prix de revente occasion estime.
+- Mondial Relay = livraison par defaut de l'acheteur. Tarifs : moins de 500g=3.49EUR / moins de 1kg=4.29EUR / moins de 2kg=4.79EUR / moins de 5kg=5.49EUR / moins de 10kg=6.49EUR.
+- VERDICT : ACHETE si prix demande+frais MR inferieur ou egal a 65% du prix occasion / NEGOCIE si legerement au-dessus / PASSE si trop cher.
+
+Reponds UNIQUEMENT avec un JSON valide sans aucun texte avant ou apres :
+{"jeu":"nom exact du jeu identifie","prix_demande":"XX EUR (extrait de l'annonce)","etat_annonce":"etat extrait de l'annonce","plateforme":"plateforme detectee","prix_neuf":"XX EUR","prix_occasion_moyen":"XX-XX EUR","frais_mr":"X.XX EUR poids ~Xkg","prix_max_sans_mr":"XX EUR","prix_max_avec_mr":"XX EUR","marge":"XX EUR","revente":"Facile ou Moyenne ou Difficile","raison_revente":"courte explication","verdict":"ACHETE ou NEGOCIE ou PASSE","justification":"1-2 phrases","conseil":"conseil si NEGOCIE sinon vide","attention":"points a verifier"}`;
 
 document.getElementById('btnAnalyse').addEventListener('click', runAnalyse);
 
@@ -676,28 +626,23 @@ async function runAnalyse(){
     alert('Configure d\'abord ta clé API en haut de cette page.\nSi tu n\'en as pas, utilise l\'onglet "Sans clé API".');
     return;
   }
-  const name=document.getElementById('a-name').value.trim();
-  const price=parseFloat(document.getElementById('a-price').value)||0;
-  const state=document.getElementById('a-state').value;
-  const platform=document.getElementById('a-platform').value;
-  const shipping=document.getElementById('a-shipping').value||'mondial_relay';
-  const notes=document.getElementById('a-notes').value.trim();
   const url=document.getElementById('a-url').value.trim();
-  if(!name){alert('Entre le nom du jeu.');return;}
-  if(!price){alert('Entre le prix demandé.');return;}
-  const stLbl=({TB:'Tres bon etat',B:'Bon etat',M:'Moyen etat'}[state])||'etat non precise';
-  const shLbl=({mondial_relay:'Mondial Relay',colissimo:'Colissimo',main_propre:'Main propre',non_precise:'Non precise'}[shipping])||'Mondial Relay';
-  const parts=['Analyse cette annonce de jeu de societe :',''];
-  if(url)parts.push('Lien : '+url);
-  parts.push('Jeu : '+name,'Prix : '+price+' EUR','Etat : '+stLbl);
-  if(platform)parts.push('Plateforme : '+platform);
-  parts.push('Livraison : '+shLbl);
-  if(notes)parts.push('Infos : '+notes);
-  parts.push('','Recherche les prix actuels et fournis ton analyse JSON.');
+  const notes=document.getElementById('a-notes').value.trim();
+  if(!url){alert('Colle le lien de l\'annonce.');return;}
+
+  const parts=[
+    'Analyse cette annonce de jeu de societe d\'occasion :','',
+    'Lien : '+url,
+    '',
+    'Visite ce lien, extrait le nom du jeu, le prix demande, l\'etat et la plateforme.',
+    'Recherche ensuite les prix actuels sur le marche francais.',
+    'Calcule la rentabilite et fournis ton analyse JSON complète.'
+  ];
+  if(notes)parts.push('','Infos supplementaires precisees par l\'acheteur : '+notes);
   const msg=parts.join('\n');
 
   const res=document.getElementById('analyseResult');
-  res.innerHTML=`<div class="loading-pulse"><div class="pulse-dot"></div><div class="pulse-dot"></div><div class="pulse-dot"></div><span>Recherche des prix en cours…</span></div>`;
+  res.innerHTML=`<div class="loading-pulse"><div class="pulse-dot"></div><div class="pulse-dot"></div><div class="pulse-dot"></div><span>Analyse de l'annonce en cours…</span></div>`;
   document.getElementById('addBlock').style.display='none';
   const btn=document.getElementById('btnAnalyse');
   btn.disabled=true;btn.textContent='⏳ En cours…';
@@ -712,12 +657,14 @@ async function runAnalyse(){
     if(!resp.ok)throw new Error(data?.error?.message||'Erreur API '+resp.status);
     const text=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
     if(!text)throw new Error('Aucune réponse. Clé API invalide ou épuisée ?');
-    const match=text.match(/\{[\s\S]*?\}/);
+    const match=text.match(/\{[\s\S]*\}/);
     if(!match)throw new Error('Format inattendu. Réessaie.');
     const r=JSON.parse(match[0]);
     if(r.verdict==='ACHETE')r.verdict='ACHÈTE';
     if(r.verdict==='NEGOCIE')r.verdict='NÉGOCIE';
-    showResult(r,name,price,state,platform,url);
+    // Détecter la plateforme depuis l'URL si pas dans le JSON
+    if(!r.plateforme)r.plateforme=detectPlatform(url);
+    showResult(r, url);
   }catch(err){
     console.error(err);
     let hint='';
@@ -730,23 +677,28 @@ async function runAnalyse(){
   }
 }
 
-function showResult(r,origName,origPrice,origState,origPlatform,origUrl){
+function showResult(r, origUrl){
   const vCls=({ACHÈTE:'v-achete',NÉGOCIE:'v-negocie',PASSE:'v-passe'})[r.verdict]||'v-negocie';
   const revCls=({Facile:'rev-facile',Moyenne:'rev-moyenne',Difficile:'rev-difficile'})[r.revente]||'rev-moyenne';
+  const demandNum=parseFloat(String(r.prix_demande||'').replace(/[^\d.,]/g,'').replace(',','.'))||0;
   const maxNum=parseFloat(String(r.prix_max_avec_mr||'').replace(/[^\d.,]/g,'').replace(',','.'))||0;
   const margeNum=parseFloat(String(r.marge||'').replace(/[^\d.,-]/g,'').replace(',','.'))||0;
+  const priceCls=demandNum&&maxNum?(demandNum<=maxNum?'g':'r'):'';
   document.getElementById('analyseResult').innerHTML=`
 <div class="result-wrap"><div class="result-card">
   <div class="result-header">
-    <div class="result-game">${esc(r.jeu||origName)}</div>
+    <div class="result-game">${esc(r.jeu||'Jeu identifié')}</div>
     <div class="vp ${vCls}">${r.verdict}</div>
   </div>
   <div class="result-grid">
+    <div class="rcell"><div class="rcell-label">Prix demandé</div><div class="rcell-val ${priceCls}">${esc(r.prix_demande)}</div></div>
+    <div class="rcell"><div class="rcell-label">État annoncé</div><div class="rcell-val">${esc(r.etat_annonce||'—')}</div></div>
+    <div class="rcell"><div class="rcell-label">Plateforme</div><div class="rcell-val">${esc(r.plateforme||'—')}</div></div>
     <div class="rcell"><div class="rcell-label">Prix neuf</div><div class="rcell-val">${esc(r.prix_neuf)}</div></div>
     <div class="rcell"><div class="rcell-label">Prix occasion moyen</div><div class="rcell-val">${esc(r.prix_occasion_moyen)}</div></div>
-    <div class="rcell"><div class="rcell-label">Frais MR estimés</div><div class="rcell-val">${esc(r.frais_mr)}</div></div>
+    <div class="rcell"><div class="rcell-label">Frais Mondial Relay</div><div class="rcell-val">${esc(r.frais_mr)}</div></div>
     <div class="rcell"><div class="rcell-label">Prix max à payer</div><div class="rcell-val g">${esc(r.prix_max_avec_mr)}</div></div>
-    <div class="rcell"><div class="rcell-label">Prix demandé</div><div class="rcell-val ${origPrice<=maxNum?'g':'r'}">${origPrice.toFixed(2)}€</div></div>
+    <div class="rcell"><div class="rcell-label">Prix demandé vs max</div><div class="rcell-val ${priceCls}">${demandNum?demandNum.toFixed(2)+'€ '+(demandNum<=maxNum?'✓':'✗'):'—'}</div></div>
     <div class="rcell"><div class="rcell-label">Marge si revente</div><div class="rcell-val ${margeNum>5?'g':margeNum>0?'y':'r'}">${esc(r.marge)}</div></div>
   </div>
   <div class="result-body">
@@ -757,10 +709,13 @@ function showResult(r,origName,origPrice,origState,origPlatform,origUrl){
   </div>
   <div class="result-footer">🚚 <span>Mondial Relay</span> — frais intégrés dans le calcul du prix max.</div>
 </div></div>`;
-  document.getElementById('add-name').value=r.jeu||origName;
-  document.getElementById('add-price').value=origPrice;
-  document.getElementById('add-state').value=origState||'';
-  document.getElementById('add-platform').value=origPlatform||'';
+  // Pré-remplir le bloc ajout avec les infos extraites par l'IA
+  const stateMap={'tres bon':'TB','très bon':'TB','tb':'TB','bon':'B','moyen':'M','m':'M','b':'B'};
+  const stateKey=Object.keys(stateMap).find(k=>(r.etat_annonce||'').toLowerCase().includes(k))||'';
+  document.getElementById('add-name').value=r.jeu||'';
+  document.getElementById('add-price').value=demandNum||'';
+  document.getElementById('add-state').value=stateMap[stateKey]||'';
+  document.getElementById('add-platform').value=r.plateforme||detectPlatform(origUrl)||'';
   document.getElementById('add-url').value=origUrl||'';
   document.getElementById('add-city').value='';
   document.getElementById('addBlock').style.display='block';
@@ -795,68 +750,53 @@ document.getElementById('naBtnDoAdd').addEventListener('click',()=>addToList('na
 // ONGLET SANS API — GÉNÉRATION PROMPT
 // ═══════════════════════════════════
 const SHIPPING_LBL={mondial_relay:'Mondial Relay (choix de l\'acheteur)',colissimo:'Colissimo',main_propre:'Main propre uniquement',non_precise:'Non précisé'};
-const STATE_LBL={TB:'Très bon état (TB)',B:'Bon état (B)',M:'Moyen état (M)'};
 
 function buildPrompt(){
   const url=document.getElementById('na-url').value.trim();
-  const name=document.getElementById('na-name').value.trim();
-  const price=document.getElementById('na-price').value.trim();
-  const state=document.getElementById('na-state').value;
-  const platform=document.getElementById('na-platform').value;
-  const shipping=document.getElementById('na-shipping').value||'mondial_relay';
   const notes=document.getElementById('na-notes').value.trim();
   const lines=[
     'Analyse cette annonce de jeu de société d\'occasion :','',
     ...(url?['🔗 Lien : '+url]:[]),
-    ...(name?['🎲 Jeu : '+name]:[]),
-    ...(price?['💶 Prix demandé : '+price+'€']:[]),
-    '📦 État : '+(STATE_LBL[state]||'non précisé'),
-    ...(platform?['🛒 Plateforme : '+platform]:[]),
-    '🚚 Livraison : '+(SHIPPING_LBL[shipping]||'Mondial Relay'),
-    ...(notes?['📝 Infos : '+notes]:[]),
     '',
-    '--- RÈGLES ---',
-    'AVANT TOUT : recherche les prix réels actuels sur Vinted, Leboncoin, Okkazeo, Philibert, Amazon FR.',
-    'Règle : ne jamais payer plus de 65% du prix de revente occasion estimé.',
-    'Mondial Relay (tarifs) : <500g=3,49€ / <1kg=4,29€ / <2kg=4,79€ / <5kg=5,49€ / <10kg=6,49€. Déduis ces frais du prix max.',
+    'Visite ce lien et extrait : nom du jeu, prix demandé, état, plateforme.',
+    'Recherche ensuite les prix actuels sur Vinted, Leboncoin, Okkazeo, Philibert, Amazon FR.',
+    'Livraison : Mondial Relay (tarifs : <500g=3,49€ / <1kg=4,29€ / <2kg=4,79€ / <5kg=5,49€ / <10kg=6,49€).',
+    'Règle d\'or : ne jamais payer plus de 65% du prix de revente occasion estimé (frais MR déduits).',
+    ...(notes?['','Infos supplémentaires : '+notes]:[]),
     '',
-    'Format de réponse souhaité :',
+    'Format de réponse :',
     '🎲 Jeu identifié : [nom exact]',
+    '💶 Prix demandé : [prix extrait]',
+    '📦 État : [état extrait]',
     '🏷️ Prix neuf constaté : [prix + source]',
     '♻️ Prix occasion moyen : [fourchette]',
-    '🚚 Frais Mondial Relay estimés : [tarif + poids estimé]',
-    '💰 Prix max à payer (sans frais) : [65% du prix occasion]',
-    '✅ Prix max à payer (frais MR déduits) : [prix max - frais MR]',
-    '📈 Marge estimée si revente : [prix occasion - prix achat]',
+    '🚚 Frais Mondial Relay : [tarif + poids estimé]',
+    '💰 Prix max à payer (frais MR déduits) : [65% du prix occasion - frais MR]',
+    '📈 Marge estimée si revente : [calcul]',
     '🔄 Facilité de revente : Facile / Moyenne / Difficile',
     '🏆 VERDICT : ACHÈTE / NÉGOCIE / PASSE',
     '💬 Conseil : [argument de négociation si NÉGOCIE]',
-    '⚠️ Points d\'attention : [état, édition, pièces manquantes…]',
+    '⚠️ Points d\'attention : [éléments à vérifier]',
   ];
   return lines.join('\n');
 }
 
 function updatePrompt(){
-  const name=document.getElementById('na-name').value.trim();
   const url=document.getElementById('na-url').value.trim();
-  const price=document.getElementById('na-price').value.trim();
-  if(!name&&!url){
+  if(!url){
     document.getElementById('promptWrap').style.display='none';
     document.getElementById('naAddBlock').style.display='none';
     return;
   }
   document.getElementById('promptBox').textContent=buildPrompt();
   document.getElementById('promptWrap').style.display='block';
-  // Pré-remplir le bloc ajout
-  document.getElementById('na-add-name').value=name;
-  document.getElementById('na-add-price').value=price;
-  document.getElementById('na-add-state').value=document.getElementById('na-state').value;
-  document.getElementById('na-add-platform').value=document.getElementById('na-platform').value;
+  // Pré-remplir le bloc ajout avec ce qu'on sait déjà
   document.getElementById('na-add-url').value=url;
+  document.getElementById('na-add-platform').value=detectPlatform(url)||'';
   document.getElementById('naAddBlock').style.display='block';
 }
 
-['na-url','na-name','na-price','na-state','na-platform','na-shipping','na-notes'].forEach(id=>{
+['na-url','na-notes'].forEach(id=>{
   const el=document.getElementById(id);
   if(el){el.addEventListener('input',updatePrompt);el.addEventListener('change',updatePrompt);}
 });

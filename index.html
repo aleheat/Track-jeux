@@ -651,18 +651,7 @@ function prefillAnalyse(id){
 // ═══════════════════════════════════
 // ANALYSE AVEC API
 // ═══════════════════════════════════
-const SYSTEM=`Tu es un expert en jeux de societe d'occasion sur le marche francais. Tu connais tres bien les prix habituels sur Vinted, Leboncoin, Okkazeo, Philibert, Amazon FR et les boutiques specialisees.
-
-MISSION : A partir du lien fourni, identifies le jeu, estimes les prix du marche depuis ta connaissance, et calcules la rentabilite.
-
-REGLES :
-- Ne jamais payer plus de 65% du prix de revente occasion estime.
-- Mondial Relay = livraison par defaut. Tarifs : moins de 500g=3.49EUR / moins de 1kg=4.29EUR / moins de 2kg=4.79EUR / moins de 5kg=5.49EUR / moins de 10kg=6.49EUR.
-- VERDICT : ACHETE si prix demande+frais MR inferieur ou egal a 65% du prix occasion / NEGOCIE si legerement au-dessus / PASSE si trop cher.
-- Si le jeu t'est inconnu ou tres recent, indique-le dans "attention" et sois prudent dans l'estimation.
-
-Reponds UNIQUEMENT avec un JSON valide sans aucun texte avant ou apres :
-{"jeu":"nom exact du jeu identifie","prix_demande":"XX EUR (extrait ou estime depuis le lien)","etat_annonce":"etat extrait de l'annonce","plateforme":"plateforme detectee","prix_neuf":"XX EUR","prix_occasion_moyen":"XX-XX EUR","frais_mr":"X.XX EUR poids ~Xkg","prix_max_sans_mr":"XX EUR","prix_max_avec_mr":"XX EUR","marge":"XX EUR","revente":"Facile ou Moyenne ou Difficile","raison_revente":"courte explication","verdict":"ACHETE ou NEGOCIE ou PASSE","justification":"1-2 phrases","conseil":"conseil si NEGOCIE sinon vide","attention":"points a verifier ou limites de l'estimation"}`;
+const SYSTEM=`Expert jeux occasion france. Depuis le lien: identifie jeu+prix+etat+plateforme. Estime prix marche depuis ta connaissance. Regle: max 65% prix occasion apres deduction frais Mondial Relay (MR: <500g=3.49 <1kg=4.29 <2kg=4.79 <5kg=5.49 <10kg=6.49 EUR). VERDICT: ACHETE(<=65%) NEGOCIE(proche) PASSE(trop cher). JSON uniquement sans texte: {"jeu":"","prix_demande":"","etat_annonce":"","plateforme":"","prix_neuf":"","prix_occasion_moyen":"","frais_mr":"","prix_max_avec_mr":"","marge":"","revente":"Facile/Moyenne/Difficile","verdict":"ACHETE/NEGOCIE/PASSE","justification":"","conseil":"","attention":""}`;
 
 document.getElementById('btnAnalyse').addEventListener('click', runAnalyse);
 
@@ -678,16 +667,10 @@ async function runAnalyse(){
   const notes=document.getElementById('a-notes').value.trim();
   if(!url){alert('Colle le lien de l\'annonce.');return;}
 
-  const parts=[
-    'Analyse cette annonce de jeu de societe d\'occasion :','',
-    'Lien : '+url,
-    '',
-    'Visite ce lien, extrait le nom du jeu, le prix demande, l\'etat et la plateforme.',
-    'Recherche ensuite les prix actuels sur le marche francais.',
-    'Calcule la rentabilite et fournis ton analyse JSON complète.'
-  ];
-  if(notes)parts.push('','Infos supplementaires precisees par l\'acheteur : '+notes);
-  const msg=parts.join('\n');
+  const parts = ['Lien: '+url];
+  if(notes) parts.push('Infos: '+notes);
+  parts.push('Analyse et retourne le JSON.');
+  const msg = parts.join('\n');
 
   const res=document.getElementById('analyseResult');
   res.innerHTML=`<div class="loading-pulse"><div class="pulse-dot"></div><div class="pulse-dot"></div><div class="pulse-dot"></div><span>Analyse en cours…</span></div>`;
@@ -699,7 +682,7 @@ async function runAnalyse(){
     const resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1500,system:SYSTEM,messages:[{role:'user',content:msg}]})
+      body:JSON.stringify({model:'claude-3-haiku-20240307',max_tokens:500,system:SYSTEM,messages:[{role:'user',content:msg}]})
     });
     const data=await resp.json();
     if(!resp.ok)throw new Error(data?.error?.message||'Erreur API '+resp.status);
